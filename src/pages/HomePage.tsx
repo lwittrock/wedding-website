@@ -173,10 +173,10 @@ const HomePage: React.FC = () => {
           <FAQItem icon={BedDouble} question="What type of accommodation can I expect?">
             <p className="mb-2">
               We’ve made sure all guests will have a comfortable room for Friday and Saturday night, 
-              either at the Domaine or in a nearby gîte a 5-minute walk away.
+              either at the Domaine or in a nearby Gîte a 5-minute walk away. All costs are covered by us.
             </p>
             <p className="mb-2">
-              If you're staying in one of the places we've booked, we've got the costs covered.
+              There are different types of rooms (2, 3, and 4 beds), we may ask some of you to share with others to have space for everyone.
             </p>
             <p>
               If you’d rather arrange your own place to stay, that is perfectly fine! Please let us know as soon as possible.

@@ -77,7 +77,7 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
       const allMatches = [...(nameMatches || []), ...(partyMatches || [])];
       
       if (allMatches.length === 0) {
-        setError("We couldn't find an invitation for that name. Please try your full first or last name.");
+        setError("We couldn't find an invitation for that name. Please try one full, first or last name. If that does not work, send us a message on WhatsApp!");
         setLoading(false);
         return;
       }
@@ -171,7 +171,7 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
                 className="w-full text-left p-4 border border-secondary/30 rounded-md bg-white hover:bg-background transition shadow-sm"
               >
                 <span className="font-semibold text-neutral">
-                  The {party.party_name} Party
+                  The {party.party_name}
                 </span>
                 <span className="block text-xs text-secondary/80">
                   (Includes: {party.guests.map(g => g.full_name.split(' ')[0]).join(', ')})

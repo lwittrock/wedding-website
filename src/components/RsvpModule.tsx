@@ -35,7 +35,7 @@ const RsvpModule: React.FC = () => {
             <>
               <CheckCircle size={48} className="text-primary mx-auto mb-4" />
               <h3 className="text-2xl font-parisienne text-primary mb-2">
-                Thank You, {party.party_name} Party!
+                Thank You!
               </h3>
               <p className="text-lg text-neutral mb-6">
                 Your RSVP has been confirmed. We can't wait to celebrate with you!
