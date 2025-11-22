@@ -1,257 +1,171 @@
-import React, { useState, useEffect } from 'react';
-import { Menu, X, MapPin, Calendar, Users, HelpCircle } from 'lucide-react';
+import React, { useState } from "react";
+import Navigation from "../components/Navigation";
+import Hero from "../components/Hero";
+import Section from "../components/Section";
+import ScheduleTimeline from "../components/ScheduleTimeline";
+import ScheduleItem from "../components/ScheduleItem";
+import Footer from "../components/Footer";
+
+import { useScrollSpy } from "../hooks/useScrollSpy";
+import { SECTIONS } from "../constants/sections";
+
+import { Calendar, MapPin, HelpCircle, Users } from "lucide-react";
 
 const HomePage: React.FC = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
-  const [activeSection, setActiveSection] = useState<string>('home');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = (): void => {
-      const sections = ['home', 'schedule', 'travel', 'faq', 'rsvp'];
-      const current = sections.find(section => {
-        const element = document.getElementById(section);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          return rect.top <= 100 && rect.bottom >= 100;
-        }
-        return false;
-      });
-      if (current) setActiveSection(current);
-    };
+  // Detect which section is currently visible
+  const activeSection = useScrollSpy(
+    SECTIONS.map((s) => s.id),
+    100
+  );
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // Smooth scroll + account for fixed nav height
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
 
-  const scrollToSection = (sectionId: string): void => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setIsMenuOpen(false);
-    }
+    const navHeight = 64;
+    const y =
+      el.getBoundingClientRect().top + window.pageYOffset - navHeight;
+
+    window.scrollTo({ top: y, behavior: "smooth" });
+    setIsMenuOpen(false);
   };
 
   return (
     <div className="min-h-screen bg-[#FAF7F2]">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-[#FAF7F2]/95 backdrop-blur-sm shadow-sm z-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <button
-              onClick={() => scrollToSection('home')}
-              className="text-[#427161] hover:text-[#cc5500] transition-colors"
-              style={{ fontFamily: 'Parisienne, cursive', fontSize: '1.5rem' }}
-            >
-              J & L
-            </button>
+      <Navigation
+        activeSection={activeSection}
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        scrollToSection={scrollToSection}
+      />
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex space-x-8">
-              {[
-                { id: 'home', label: 'Home' },
-                { id: 'schedule', label: 'Schedule' },
-                { id: 'travel', label: 'Travel' },
-                { id: 'faq', label: 'FAQ' },
-                { id: 'rsvp', label: 'RSVP' }
-              ].map(item => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className={`text-sm transition-colors ${
-                    activeSection === item.id
-                      ? 'text-[#cc5500]'
-                      : 'text-[#427161] hover:text-[#cc5500]'
-                  }`}
-                  style={{ fontFamily: 'Alice, serif' }}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-
-            {/* Mobile menu button */}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden text-[#427161]"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-[#FAF7F2] border-t border-[#427161]/20">
-            <div className="px-4 py-4 space-y-3">
-              {[
-                { id: 'home', label: 'Home' },
-                { id: 'schedule', label: 'Schedule' },
-                { id: 'travel', label: 'Travel' },
-                { id: 'faq', label: 'FAQ' },
-                { id: 'rsvp', label: 'RSVP' }
-              ].map(item => (
-                <button
-                  key={item.id}
-                  onClick={() => scrollToSection(item.id)}
-                  className="block w-full text-left text-[#427161] hover:text-[#cc5500] transition-colors py-2"
-                  style={{ fontFamily: 'Alice, serif' }}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </nav>
-
-      {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex items-end pt-16">
-        <div className="absolute inset-0">
-          <img
-            src="/venue-painting.png"
-            alt="Venue watercolor"
-            className="w-full h-full object-cover opacity-90"
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#FAF7F2]/95"></div>
-        </div>
-        
-        <div className="relative z-10 w-full px-4 pb-12 sm:pb-16 lg:pb-20">
-          <div className="max-w-4xl mx-auto text-center">
-            {/* Decorative element */}
-            <div className="mb-6 flex justify-center">
-              <div className="w-32 h-px bg-gradient-to-r from-transparent via-[#427161] to-transparent"></div>
-            </div>
-            
-            <h1
-              className="text-5xl sm:text-6xl lg:text-7xl mb-4 text-[#cc5500]"
-              style={{ fontFamily: 'Parisienne, cursive' }}
-            >
-              Jenna & Lars
-            </h1>
-            
-            <h2
-              className="text-2xl sm:text-3xl lg:text-4xl mb-6 text-[#427161]"
-              style={{ fontFamily: 'Alice, serif' }}
-            >
-              Wedding Weekend
-            </h2>
-            
-            <div
-              className="text-xl sm:text-2xl mb-8 text-[#494949]"
-              style={{ fontFamily: 'Alice, serif' }}
-            >
-              26 - 28 June 2026
-            </div>
-            
-            <div
-              className="flex items-center justify-center gap-2 text-[#427161] mb-4"
-              style={{ fontFamily: 'Alice, serif' }}
-            >
-              <MapPin size={20} />
-              <span className="text-base sm:text-lg">Domaine Des Officiers</span>
-            </div>
-            
-            <div
-              className="text-[#427161] text-sm sm:text-base"
-              style={{ fontFamily: 'Alice, serif' }}
-            >
-              Vielsalm, Belgian Ardennes
-            </div>
-
-            {/* Decorative element */}
-            <div className="mt-8 flex justify-center">
-              <div className="w-32 h-px bg-gradient-to-r from-transparent via-[#427161] to-transparent"></div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero */}
+      <Hero />
 
       {/* Schedule Section */}
-      <section id="schedule" className="py-20 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <Calendar className="text-[#cc5500]" size={28} />
-            <h2
-              className="text-3xl sm:text-4xl text-[#427161]"
-              style={{ fontFamily: 'Parisienne, cursive' }}
-            >
-              Schedule
-            </h2>
-          </div>
-          <div className="text-center text-[#494949]" style={{ fontFamily: 'Alice, serif' }}>
-            <p className="text-lg">Weekend itinerary coming soon...</p>
-          </div>
+      <Section id="schedule" dividerGap="lg" contentBottomPadding="lg">
+        <div className="flex items-center justify-center gap-3 mb-12">
+          <Calendar className="text-[#cc5500]" size={28} />
+          <h2 className="text-3xl sm:text-4xl text-[#427161] font-parisienne">
+            Schedule
+          </h2>
         </div>
-      </section>
+
+        <ScheduleTimeline>
+          <ScheduleItem
+            title="Arrival, checking in and getting ready"
+            dateTime="Friday, June 26th, 13.00"
+          >
+            <p>
+              From 13.00 onward we are ready to welcome you at the Domaine!
+              We'll tell you where to find your room, and you'll have time
+              to drop your bags and get ready. If you don't need that much
+              time, a cold drink will be waiting for you.
+            </p>
+          </ScheduleItem>
+
+          <ScheduleItem
+            title="Wedding Time!"
+            dateTime="Friday, June 26th, 15.30 - 03.00"
+          >
+            <p>
+              Find yourself a seat and get ready to celebrate! The ceremony
+              starts at 16.00 — don't miss it. We’ll continue with dinner,
+              drinks, and dancing.
+            </p>
+          </ScheduleItem>
+
+          <ScheduleItem
+            title="Relax at the Domaine or Explore the Ardennes"
+            dateTime="Saturday, June 27th, 10.00 - 16.00"
+          >
+            <p className="mb-3">
+              Breakfast / brunch / lunch whenever you’re ready!
+            </p>
+            <p className="mb-3">
+              Outdoor enthusiasts: explore museums, history, hikes, or cycling.
+            </p>
+            <p>
+              Relaxation enthusiasts: hang out at the Domaine — tennis,
+              football, jeu de boules, sauna, and vibes.
+            </p>
+          </ScheduleItem>
+
+          <ScheduleItem
+            title="Barbecue & Bonfire"
+            dateTime="Saturday, June 27th, 16.00 - ..."
+          >
+            <p>
+              If the weather treats us well, we’ll turn on the grill. If it
+              doesn’t treat us well… we’ll still turn on the grill.
+            </p>
+          </ScheduleItem>
+
+          <ScheduleItem
+            title="Breakfast & Departure"
+            dateTime="Sunday, June 28th, 10.00 - ..."
+            isLast
+          >
+            <p>
+              One last breakfast together before we say goodbye. Thank you
+              for celebrating with us!
+            </p>
+          </ScheduleItem>
+        </ScheduleTimeline>
+      </Section>
 
       {/* Travel Section */}
-      <section id="travel" className="py-20 px-4 bg-[#FAF7F2]">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <MapPin className="text-[#cc5500]" size={28} />
-            <h2
-              className="text-3xl sm:text-4xl text-[#427161]"
-              style={{ fontFamily: 'Parisienne, cursive' }}
-            >
-              Travel & Accommodations
-            </h2>
-          </div>
-          <div className="text-center text-[#494949]" style={{ fontFamily: 'Alice, serif' }}>
-            <p className="text-lg">Travel information coming soon...</p>
-          </div>
+      <Section id="travel" dividerGap="lg" contentBottomPadding="lg">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <MapPin className="text-[#cc5500]" size={28} />
+          <h2 className="text-3xl sm:text-4xl text-[#427161] font-parisienne">
+            Travel & Accommodations
+          </h2>
         </div>
-      </section>
+
+        <div className="text-center text-[#494949] font-alice">
+          <p className="text-lg">Travel information coming soon...</p>
+        </div>
+      </Section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-20 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <HelpCircle className="text-[#cc5500]" size={28} />
-            <h2
-              className="text-3xl sm:text-4xl text-[#427161]"
-              style={{ fontFamily: 'Parisienne, cursive' }}
-            >
-              Frequently Asked Questions
-            </h2>
-          </div>
-          <div className="text-center text-[#494949]" style={{ fontFamily: 'Alice, serif' }}>
-            <p className="text-lg">FAQ details coming soon...</p>
-          </div>
+      <Section id="faq" dividerGap="lg" contentBottomPadding="lg">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <HelpCircle className="text-[#cc5500]" size={28} />
+          <h2 className="text-3xl sm:text-4xl text-[#427161] font-parisienne">
+            Frequently Asked Questions
+          </h2>
         </div>
-      </section>
+
+        <div className="text-center text-[#494949] font-alice">
+          <p className="text-lg">FAQ details coming soon...</p>
+        </div>
+      </Section>
 
       {/* RSVP Section */}
-      <section id="rsvp" className="py-20 px-4 bg-[#FAF7F2]">
-        <div className="max-w-4xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <Users className="text-[#cc5500]" size={28} />
-            <h2
-              className="text-3xl sm:text-4xl text-[#427161]"
-              style={{ fontFamily: 'Parisienne, cursive' }}
-            >
-              RSVP
-            </h2>
-          </div>
-          <div className="text-center text-[#494949]" style={{ fontFamily: 'Alice, serif' }}>
-            <p className="text-lg mb-6">Please let us know if you can join us!</p>
-            <button
-              className="bg-[#cc5500] hover:bg-[#b34a00] text-white px-8 py-3 rounded-md transition-colors"
-              style={{ fontFamily: 'Alice, serif' }}
-            >
-              RSVP Form (Coming Soon)
-            </button>
-          </div>
+      <Section id="rsvp" dividerGap="lg" contentBottomPadding="xl">
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <Users className="text-[#cc5500]" size={28} />
+          <h2 className="text-3xl sm:text-4xl text-[#427161] font-parisienne">
+            RSVP
+          </h2>
         </div>
-      </section>
+
+        <div className="text-center text-[#494949] font-alice">
+          <p className="text-lg mb-6">Please let us know if you can join us!</p>
+
+          <button className="bg-[#cc5500] hover:bg-[#b34a00] text-white px-8 py-3 rounded-md transition-colors font-alice">
+            RSVP Form (Coming Soon)
+          </button>
+        </div>
+      </Section>
 
       {/* Footer */}
-      <footer className="bg-[#427161] text-white py-8 px-4">
-        <div className="max-w-4xl mx-auto text-center" style={{ fontFamily: 'Alice, serif' }}>
-          <p className="text-sm">
-            We can't wait to celebrate with you in the Belgian Ardennes!
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
