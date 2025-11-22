@@ -1,21 +1,18 @@
 // src/types/rsvp.ts
-
 export interface Guest {
   id: string;
-  group_id: string;
   full_name: string;
+  party_name: string;
   is_attending: boolean | null;
-  dietary_preferences: string | null;
+  dietary_preferences?: string;
+  song_request?: string;
+  accommodation_choice?: string;
+  weekend_duration?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
-export interface GuestGroup {
-  id: string;
-  name_search: string;
-  accommodation_choice: string | null;
-  weekend_duration: string | null;
-  song_request: string | null;
-  guests: Guest[]; // Array of guests linked to this group
+export interface PartyGroup {
+  party_name: string;
+  guests: Guest[];
 }
-
-// Type used when fetching group data from Supabase before guests are attached
-export type GroupData = Omit<GuestGroup, 'guests'>;

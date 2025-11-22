@@ -1,23 +1,21 @@
 import React, { useState, useMemo } from 'react';
 import { supabase } from '../utils/supabase';
 import { Loader2, CheckCircle, Gift, BedDouble, CalendarCheck } from 'lucide-react';
-import type { GuestGroup } from '../types/rsvp'; // Correct type-only import
-
-// Note: The Guest and GuestGroup interfaces are now imported from ../types/rsvp
+import type { PartyGroup, Guest } from '../types/rsvp';
 
 interface RsvpFormProps {
-  initialGroup: GuestGroup;
-  onSuccess: () => void;
+  initialParty: PartyGroup;
+  onSuccess: (isAttending: boolean) => void;
 }
 
-const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
+const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
   // --- Individual Guest State ---
-  const [guests, setGuests] = useState(initialGroup.guests);
+  const [guests, setGuests] = useState<Guest[]>(initialParty.guests);
 
-  // --- Group Level State ---
-  const [accommodation, setAccommodation] = useState(initialGroup.accommodation_choice || '');
-  const [duration, setDuration] = useState(initialGroup.weekend_duration || '');
-  const [song, setSong] = useState(initialGroup.song_request || '');
+  // --- Party Level State (from first guest since they're duplicated) ---
+  const [accommodation, setAccommodation] = useState(initialParty.guests[0]?.accommodation_choice || '');
+  const [duration, setDuration] = useState(initialParty.guests[0]?.weekend_duration || '');
+  const [song, setSong] = useState(initialParty.guests[0]?.song_request || '');
 
   // --- Form State ---
   const [loading, setLoading] = useState(false);
@@ -60,38 +58,29 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
 
     try {
       // 2. Prepare Guest Data for Upsert (Insert/Update)
+      // For each guest, include their personal info AND the shared party-level fields
       const guestUpdates = guests.map(g => ({
-        full_name: g.full_name,
-        group_id: g.group_id,
         id: g.id,
+        full_name: g.full_name,
+        party_name: g.party_name,
         is_attending: g.is_attending,
         dietary_preferences: g.dietary_preferences,
-        // group_id is required but inferred from the object structure
+        song_request: song, // Duplicated across all party members
+        accommodation_choice: isAnyoneAttending ? accommodation : null, // Duplicated
+        weekend_duration: isAnyoneAttending ? duration : null, // Duplicated
       }));
       
-      // Upsert: Updates existing guests or inserts if they were new (though here they are existing)
-      const { error: guestError } = await supabase.from('guests').upsert(guestUpdates);
+      // Upsert: Updates existing guests with all their data
+      const { error: guestError } = await supabase
+        .from('guests')
+        .upsert(guestUpdates);
 
       if (guestError) throw guestError;
 
-      // 3. Prepare Group Data for Update (Conditional based on attendance)
-      const groupUpdateData = {
-        accommodation_choice: isAnyoneAttending ? accommodation : null,
-        weekend_duration: isAnyoneAttending ? duration : null,
-        song_request: song, // Song request is always saved
-      };
+      // 3. Success!
+      onSuccess(isAnyoneAttending);
 
-      const { error: groupError } = await supabase
-        .from('groups')
-        .update(groupUpdateData)
-        .eq('id', initialGroup.id);
-
-      if (groupError) throw groupError;
-
-      // 4. Success!
-      onSuccess();
-
-    } catch (err) { // Corrected: Using catch(err) instead of catch(err: any)
+    } catch (err) {
       console.error('Submission Error:', err);
       setError('A network error occurred. Please try again or contact the couple.');
     } finally {
@@ -103,7 +92,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="p-6 bg-white/50 rounded-lg shadow-lg border border-secondary/20 max-w-2xl mx-auto">
       <h3 className="text-2xl font-parisienne text-primary mb-6 text-center">
-        The {initialGroup.name_search} Party RSVP
+        The {initialParty.party_name} Party RSVP
       </h3>
 
       {/* --- 1. ATTENDANCE (PER GUEST) --- */}
@@ -250,28 +239,31 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
         </>
       )}
 
-      {/* --- 3. MUSIC (ALWAYS SHOWN) --- */}
-      <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
-        3. Other
-      </h4>
-      <div className="mb-8 p-4 border border-secondary/20 rounded-md bg-white/70">
-        <p className="font-semibold text-neutral mb-2 flex items-center gap-2">
-          <Gift size={18} className="text-primary"/> 
-          Song Request
-        </p>
-        <label htmlFor="song" className="block text-sm text-neutral/80 mb-1">
-          What music will guarantee you on the dancefloor? (Song Title & Artist)
-        </label>
-        <input
-          id="song"
-          type="text"
-          value={song}
-          onChange={(e) => setSong(e.target.value)}
-          placeholder="e.g. Dancing Queen - ABBA"
-          className="w-full p-2 border border-neutral/30 rounded-md text-sm font-alice"
-        />
-      </div>
-
+      {/* --- 3. MUSIC (ONLY IF ATTENDING) --- */}
+      {isAnyoneAttending && (
+        <>
+          <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
+            3. Other
+          </h4>
+          <div className="mb-8 p-4 border border-secondary/20 rounded-md bg-white/70">
+            <p className="font-semibold text-neutral mb-2 flex items-center gap-2">
+              <Gift size={18} className="text-primary"/> 
+              Song Request
+            </p>
+            <label htmlFor="song" className="block text-sm text-neutral/80 mb-1">
+              What music will guarantee you on the dancefloor? (Song Title & Artist)
+            </label>
+            <input
+              id="song"
+              type="text"
+              value={song}
+              onChange={(e) => setSong(e.target.value)}
+              placeholder="e.g. Dancing Queen - ABBA"
+              className="w-full p-2 border border-neutral/30 rounded-md text-sm font-alice"
+            />
+          </div>
+        </>
+      )}
 
       {/* --- SUBMIT & ERRORS --- */}
       {error && (
@@ -288,7 +280,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
         ) : (
           <CheckCircle size={24} className="mr-2" />
         )}
-        Confirm RSVP
+        {isAnyoneAttending ? 'Confirm RSVP' : 'Submit Response'}
       </button>
     </form>
   );

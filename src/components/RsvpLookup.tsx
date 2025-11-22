@@ -1,22 +1,39 @@
 import React, { useState } from 'react';
 import { supabase } from '../utils/supabase';
 import { Search, Loader2, Users } from 'lucide-react';
-import type { GuestGroup, GroupData } from '../types/rsvp'; // Correct type-only import
 
-// Define the required props for this component
+// Simplified types for single-table structure
+interface Guest {
+  id: string;
+  full_name: string;
+  party_name: string;
+  is_attending: boolean | null;
+  dietary_preferences?: string;
+  song_request?: string;
+  accommodation_choice?: string;
+  weekend_duration?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+interface PartyGroup {
+  party_name: string;
+  guests: Guest[];
+}
+
 interface RsvpLookupProps {
-  onGroupFound: (group: GuestGroup) => void;
+  onGroupFound: (party: PartyGroup) => void;
 }
 
 const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [foundGroups, setFoundGroups] = useState<GuestGroup[]>([]);
+  const [foundParties, setFoundParties] = useState<PartyGroup[]>([]);
 
   const handleSearch = async () => {
     setError(null);
-    setFoundGroups([]);
+    setFoundParties([]);
     const searchName = name.trim();
 
     if (searchName.length < 3) {
@@ -27,73 +44,69 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
     setLoading(true);
 
     try {
-      // -----------------------------------------------------
-      // STEP 1: Search the guests table for the full name
-      // -----------------------------------------------------
-      const { data: guestMatch, error: guestError } = await supabase
+      
+      const { data: allGuests, error: testError } = await supabase
+      .from('guests')
+      .select('*');
+    
+      console.log('ALL GUESTS (test):', allGuests);
+      console.log('Test error:', testError);
+
+
+      // Search for guests by full name
+      const { data: nameMatches, error: nameError } = await supabase
         .from('guests')
-        .select('group_id')
+        .select('*')
         .ilike('full_name', `%${searchName}%`);
       
-      if (guestError) throw guestError;
+      if (nameError) throw nameError;
 
-      // Extract unique Group IDs found via guest names
-      const guestGroupIds = guestMatch.map(g => g.group_id);
+      // Search for guests by party name
+      const { data: partyMatches, error: partyError } = await supabase
+        .from('guests')
+        .select('*')
+        .ilike('party_name', `%${searchName}%`);
+      
+      if (partyError) throw partyError;
 
-      // -----------------------------------------------------
-      // STEP 2: Search the groups table by name_search (Party Name)
-      // -----------------------------------------------------
-      const { data: groupMatch, error: groupError } = await supabase
-        .from('groups')
-        .select('id')
-        .ilike('name_search', `%${searchName}%`);
-        
-      if (groupError) throw groupError;
+      console.log('Search term:', searchName);
+      console.log('Name matches:', nameMatches);
+      console.log('Party matches:', partyMatches);
 
-      // Extract unique Group IDs found via group name
-      const partyGroupIds = groupMatch.map(g => g.id);
-
-      // -----------------------------------------------------
-      // STEP 3: Combine all unique Group IDs
-      // -----------------------------------------------------
-      const allUniqueGroupIds = Array.from(new Set([...partyGroupIds, ...guestGroupIds]));
-
-      if (allUniqueGroupIds.length === 0) {
+      // Combine results
+      const allMatches = [...(nameMatches || []), ...(partyMatches || [])];
+      
+      if (allMatches.length === 0) {
         setError("We couldn't find an invitation for that name. Please try your full first or last name.");
         setLoading(false);
         return;
       }
 
-      // -----------------------------------------------------
-      // STEP 4: Fetch the complete Group records for all matching IDs
-      // -----------------------------------------------------
-      const { data: finalGroupData, error: finalGroupError } = await supabase
-        .from('groups')
-        .select('*')
-        .in('id', allUniqueGroupIds);
-
-      if (finalGroupError) throw finalGroupError;
-
-      // -----------------------------------------------------
-      // STEP 5: Fetch all linked guests for the found groups
-      // -----------------------------------------------------
-      const groupsWithGuests: GuestGroup[] = await Promise.all(
-        finalGroupData.map(async (group: GroupData) => { 
-          const { data: guestData, error: guestError } = await supabase
-            .from('guests')
-            .select('*')
-            .eq('group_id', group.id);
-
-          if (guestError) throw guestError;
-
-          // Combine group data with the array of linked guests
-          return { ...group, guests: guestData || [] } as GuestGroup;
-        })
+      // Get all unique party names from matching guests
+      const uniquePartyNames = Array.from(
+        new Set(allMatches.map(g => g.party_name))
       );
+
+      // Fetch all guests for each party
+      const { data: allPartyGuests, error: fetchError } = await supabase
+        .from('guests')
+        .select('*')
+        .in('party_name', uniquePartyNames);
+
+      if (fetchError) throw fetchError;
+
+      // Group guests by party
+      const parties: PartyGroup[] = uniquePartyNames.map(partyName => {
+        const partyGuests = allPartyGuests.filter(g => g.party_name === partyName);
+        return {
+          party_name: partyName,
+          guests: partyGuests
+        };
+      });
+
+      setFoundParties(parties);
       
-      setFoundGroups(groupsWithGuests);
-      
-    } catch (err) { // Fixed ESLint 'any' error
+    } catch (err) {
       console.error(err);
       setError('An error occurred during lookup. Please try again.');
     } finally {
@@ -101,11 +114,10 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
     }
   };
 
-  const handleSelectGroup = (group: GuestGroup) => {
-    onGroupFound(group);
+  const handleSelectParty = (party: PartyGroup) => {
+    onGroupFound(party);
   };
 
-  // --- JSX RENDER ---
   return (
     <div className="max-w-xl mx-auto p-6 bg-white/50 rounded-lg shadow-lg border border-secondary/20">
       <h3 className="text-2xl font-parisienne text-primary mb-6 text-center">
@@ -140,34 +152,36 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
       
       {/* Error Message */}
       {error && (
-        <p className="text-red-600 text-sm mb-4 text-center border border-red-200 bg-red-50 p-3 rounded-md">{error}</p>
+        <p className="text-red-600 text-sm mb-4 text-center border border-red-200 bg-red-50 p-3 rounded-md">
+          {error}
+        </p>
       )}
 
-      {/* Group Selection */}
-      {foundGroups.length > 0 && (
+      {/* Party Selection */}
+      {foundParties.length > 0 && (
         <div className="mt-6">
           <p className="text-secondary font-semibold mb-3 flex items-center gap-2">
             <Users size={20} />Choose your party:
           </p>
           <div className="space-y-3">
-            {foundGroups.map((group) => (
+            {foundParties.map((party) => (
               <button
-                key={group.id}
-                onClick={() => handleSelectGroup(group)}
+                key={party.party_name}
+                onClick={() => handleSelectParty(party)}
                 className="w-full text-left p-4 border border-secondary/30 rounded-md bg-white hover:bg-background transition shadow-sm"
               >
                 <span className="font-semibold text-neutral">
-                  The {group.name_search} Party
+                  The {party.party_name} Party
                 </span>
                 <span className="block text-xs text-secondary/80">
-                  (Includes: {group.guests.map(g => g.full_name.split(' ')[0]).join(', ')})
+                  (Includes: {party.guests.map(g => g.full_name.split(' ')[0]).join(', ')})
                 </span>
               </button>
             ))}
-            {foundGroups.length > 1 && (
-                <p className='text-xs text-neutral/70 italic text-center pt-2'>
-                    Can't find your name? Contact us directly.
-                </p>
+            {foundParties.length > 1 && (
+              <p className='text-xs text-neutral/70 italic text-center pt-2'>
+                Can't find your name? Contact us directly.
+              </p>
             )}
           </div>
         </div>
