@@ -14,28 +14,23 @@ import { Calendar, MapPin, HelpCircle, Users } from "lucide-react";
 const HomePage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Detect which section is currently visible
   const activeSection = useScrollSpy(
     SECTIONS.map((s) => s.id),
     100
   );
 
-  // Smooth scroll + account for fixed nav height
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
-
     const navHeight = 64;
-    const y =
-      el.getBoundingClientRect().top + window.pageYOffset - navHeight;
-
+    const y = el.getBoundingClientRect().top + window.pageYOffset - navHeight;
     window.scrollTo({ top: y, behavior: "smooth" });
     setIsMenuOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2]">
-      {/* Navigation */}
+    // Global Styles: Background, Text Color, and Default Font (Alice)
+    <div className="min-h-screen bg-background text-neutral font-alice">
       <Navigation
         activeSection={activeSection}
         isMenuOpen={isMenuOpen}
@@ -43,18 +38,16 @@ const HomePage: React.FC = () => {
         scrollToSection={scrollToSection}
       />
 
-      {/* Hero */}
       <Hero />
 
       {/* Schedule Section */}
-      <Section id="schedule" dividerGap="lg" contentBottomPadding="lg">
-        <div className="flex items-center justify-center gap-3 mb-12">
-          <Calendar className="text-[#cc5500]" size={28} />
-          <h2 className="text-3xl sm:text-4xl text-[#427161] font-parisienne">
-            Schedule
-          </h2>
-        </div>
-
+      <Section 
+        id="schedule" 
+        dividerGap="lg" 
+        contentBottomPadding="lg"
+        title="Schedule"
+        icon={Calendar}
+      >
         <ScheduleTimeline>
           <ScheduleItem
             title="Arrival, checking in and getting ready"
@@ -119,52 +112,47 @@ const HomePage: React.FC = () => {
       </Section>
 
       {/* Travel Section */}
-      <Section id="travel" dividerGap="lg" contentBottomPadding="lg">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <MapPin className="text-[#cc5500]" size={28} />
-          <h2 className="text-3xl sm:text-4xl text-[#427161] font-parisienne">
-            Travel & Accommodations
-          </h2>
-        </div>
-
-        <div className="text-center text-[#494949] font-alice">
+      <Section 
+        id="travel" 
+        dividerGap="lg" 
+        contentBottomPadding="lg"
+        title="Travel & Accommodations"
+        icon={MapPin}
+      >
+        <div className="text-center">
           <p className="text-lg">Travel information coming soon...</p>
         </div>
       </Section>
 
       {/* FAQ Section */}
-      <Section id="faq" dividerGap="lg" contentBottomPadding="lg">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <HelpCircle className="text-[#cc5500]" size={28} />
-          <h2 className="text-3xl sm:text-4xl text-[#427161] font-parisienne">
-            Frequently Asked Questions
-          </h2>
-        </div>
-
-        <div className="text-center text-[#494949] font-alice">
+      <Section 
+        id="faq" 
+        dividerGap="lg" 
+        contentBottomPadding="lg"
+        title="Frequently Asked Questions"
+        icon={HelpCircle}
+      >
+        <div className="text-center">
           <p className="text-lg">FAQ details coming soon...</p>
         </div>
       </Section>
 
       {/* RSVP Section */}
-      <Section id="rsvp" dividerGap="lg" contentBottomPadding="xl">
-        <div className="flex items-center justify-center gap-3 mb-8">
-          <Users className="text-[#cc5500]" size={28} />
-          <h2 className="text-3xl sm:text-4xl text-[#427161] font-parisienne">
-            RSVP
-          </h2>
-        </div>
-
-        <div className="text-center text-[#494949] font-alice">
+      <Section 
+        id="rsvp" 
+        dividerGap="lg" 
+        contentBottomPadding="xl"
+        title="RSVP"
+        icon={Users}
+      >
+        <div className="text-center">
           <p className="text-lg mb-6">Please let us know if you can join us!</p>
-
-          <button className="bg-[#cc5500] hover:bg-[#b34a00] text-white px-8 py-3 rounded-md transition-colors font-alice">
+          <button className="bg-primary hover:brightness-90 text-white px-8 py-3 rounded-md transition-all font-alice">
             RSVP Form (Coming Soon)
           </button>
         </div>
       </Section>
 
-      {/* Footer */}
       <Footer />
     </div>
   );

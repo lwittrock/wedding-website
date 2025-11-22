@@ -2,10 +2,14 @@
 @import "tailwindcss";
 
 @theme {
-  /* This creates a class called 'font-alice' */
-  --font-alice: 'Alice', serif;
-  
-  /* This creates a class called 'font-parisienne' */
+/* Colors */
+  --color-primary: #cc5500;
+  --color-secondary: #427161;
+  --color-neutral: #494949;
+  --color-background: #FAF7F2;
+
+/* Fonts */
+  --font-alice: 'Alice', serif;  
   --font-parisienne: 'Parisienne', cursive;
 }
 

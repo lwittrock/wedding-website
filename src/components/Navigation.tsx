@@ -16,23 +16,23 @@ const Navigation: React.FC<NavigationProps> = ({
   scrollToSection
 }) => {
   return (
-    <nav className="fixed top-0 left-0 w-full bg-[#FAF7F2]/80 backdrop-blur-md z-50 border-b border-[#427161]/20">
+    <nav className="fixed top-0 left-0 w-full bg-background/80 backdrop-blur-md z-50 border-b border-secondary/20">
       <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
 
         {/* Brand */}
-        <div className="text-2xl font-parisienne text-[#427161]">
-          Our Wedding
+        <div className="text-2xl font-parisienne text-secondary">
+          J & L
         </div>
 
         {/* Desktop Nav */}
-        <ul className="hidden md:flex gap-8 font-alice text-lg text-[#494949]">
+        <ul className="hidden md:flex gap-8 font-alice text-lg text-neutral">
           {SECTIONS.map((section) => (
             <li
               key={section.id}
               className={`cursor-pointer transition ${
                 activeSection === section.id
-                  ? "text-[#cc5500] font-semibold"
-                  : "hover:text-[#cc5500]"
+                  ? "text-primary font-semibold"
+                  : "hover:text-primary"
               }`}
               onClick={() => scrollToSection(section.id)}
             >
@@ -43,7 +43,7 @@ const Navigation: React.FC<NavigationProps> = ({
 
         {/* Mobile Menu Toggle */}
         <button
-          className="md:hidden"
+          className="md:hidden text-neutral"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
@@ -52,14 +52,14 @@ const Navigation: React.FC<NavigationProps> = ({
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <ul className="md:hidden bg-[#FAF7F2] border-t border-[#427161]/20 font-alice text-lg px-6 py-4 space-y-4">
+        <ul className="md:hidden bg-background border-t border-secondary/20 font-alice text-lg px-6 py-4 space-y-4">
           {SECTIONS.map((section) => (
             <li
               key={section.id}
               className={`cursor-pointer ${
                 activeSection === section.id
-                  ? "text-[#cc5500] font-semibold"
-                  : "text-[#494949]"
+                  ? "text-primary font-semibold"
+                  : "text-neutral"
               }`}
               onClick={() => scrollToSection(section.id)}
             >
