@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Parisienne&family=Alice&display=swap');
+@import "tailwindcss";
+
+@theme {
+  /* This creates a class called 'font-alice' */
+  --font-alice: 'Alice', serif;
+  
+  /* This creates a class called 'font-parisienne' */
+  --font-parisienne: 'Parisienne', cursive;
+}
+
+:root {
+  /* Sets the default font */
+  font-family: var(--font-alice);
+}
