@@ -143,13 +143,13 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
             {guest.is_attending === true && (
               <div className="mt-3">
                 <label htmlFor={`dietary-${guest.id}`} className="block text-sm text-neutral/80 mb-1">
-                  Dietary preferences/Allergies:
+                  Dietary preferences/Allergies/Anything else we need to be aware of:
                 </label>
                 <textarea
                   id={`dietary-${guest.id}`}
                   value={guest.dietary_preferences || ''}
                   onChange={(e) => handleDietaryChange(guest.id, e.target.value)}
-                  placeholder="e.g., Vegetarian, nut allergy, etc."
+                  placeholder="e.g. Vegetarian, nut allergy, I've had bad experiences with Belgian beers, etc."
                   rows={2}
                   className="w-full p-2 border border-neutral/30 rounded-md text-sm font-alice"
                 />
@@ -184,7 +184,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
                   className="form-radio text-primary"
                   required={isAnyoneAttending}
                 /> 
-                <span className='ml-2'>We'd love to stay at the Domaine/Gîte (costs covered)</span>
+                <span className='ml-2'>I/we'd love to stay at the Domaine/Gîte (costs covered)</span>
               </label>
               <label className='cursor-pointer'>
                 <input
@@ -196,7 +196,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
                   className="form-radio text-primary"
                   required={isAnyoneAttending}
                 />
-                <span className='ml-2'>We will arrange our own place to stay</span>
+                <span className='ml-2'>I/we will arrange our own place to stay</span>
               </label>
             </div>
           </div>
@@ -219,7 +219,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
                   className="form-radio text-primary"
                   required={isAnyoneAttending}
                 /> 
-                <span className='ml-2'>Yes, we'll be there for the full weekend (Fri-Sun)</span>
+                <span className='ml-2'>Yes, I/we'll be there for the full weekend (Fri-Sun)</span>
               </label>
               <label className='cursor-pointer'>
                 <input
@@ -252,7 +252,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
 
       {/* --- 3. MUSIC (ALWAYS SHOWN) --- */}
       <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
-        3. Music
+        3. Other
       </h4>
       <div className="mb-8 p-4 border border-secondary/20 rounded-md bg-white/70">
         <p className="font-semibold text-neutral mb-2 flex items-center gap-2">
@@ -267,7 +267,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialGroup, onSuccess }) => {
           type="text"
           value={song}
           onChange={(e) => setSong(e.target.value)}
-          placeholder="e.g., September - Earth, Wind & Fire"
+          placeholder="e.g. Dancing Queen - ABBA"
           className="w-full p-2 border border-neutral/30 rounded-md text-sm font-alice"
         />
       </div>

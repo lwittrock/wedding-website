@@ -147,7 +147,7 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
       {foundGroups.length > 0 && (
         <div className="mt-6">
           <p className="text-secondary font-semibold mb-3 flex items-center gap-2">
-            <Users size={20} /> Select Your Party:
+            <Users size={20} />Choose your party:
           </p>
           <div className="space-y-3">
             {foundGroups.map((group) => (

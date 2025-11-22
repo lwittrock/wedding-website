@@ -64,26 +64,48 @@ const HomePage: React.FC = () => {
       <Section id="schedule" dividerGap="lg" contentBottomPadding="lg" title="Schedule" icon={Calendar}>
         <ScheduleTimeline>
           <ScheduleItem title="Arrival, checking in and getting ready" dateTime="Friday, June 26th, 13.00">
-            <p>From 13.00 onward we are ready to welcome you at the Domaine! We'll tell you where to find your room, and you'll have time to drop your bags and get ready. If you don't need that much time, a cold drink will be waiting for you.</p>
+            <p>
+              From 13.00 onward we are ready to welcome you at the Domaine! 
+              We'll tell you where to find your room, and you'll have time to drop your bags and get ready. 
+              If you don't need that much time, a cold drink will be waiting for you.
+            </p>
           </ScheduleItem>
 
-          <ScheduleItem title="Wedding Time!" dateTime="Friday, June 26th, 15.30 - 03.00">
-            <p>Find yourself a seat and get ready to celebrate! The ceremony starts at 16.00 — don't miss it. We’ll continue with dinner, drinks, and dancing.</p>
+          <ScheduleItem title="Wedding Time!" dateTime="Friday, June 26th, 15.30">
+            <p>
+              Find yourself a seat and get ready to celebrate! 
+              The ceremony starts at 16.00, so make sure not to miss it. 
+              We'll continue the celebrations with dinner, drinks, and dancing.
+            </p>
           </ScheduleItem>
 
-          <ScheduleItem title="Relax at the Domaine or Explore the Ardennes" dateTime="Saturday, June 27th, 10.00 - 16.00">
-            <p className="mb-3">Breakfast / brunch / lunch whenever you’re ready!</p>
-            <p className="mb-3">Outdoor enthusiasts: explore museums, history, hikes, or cycling.</p>
-            <p>Relaxation enthusiasts: hang out at the Domaine — tennis, football, jeu de boules, sauna, and vibes.</p>
+          <ScheduleItem title="Relax at the Domaine or Explore the Ardennes" dateTime="Saturday, June 27th, the morning after...">
+            <p className="mb-3">
+              Breakfast / brunch / lunch is at whatever time you feel ready to leave your bedroom! 
+            </p>
+            <p className="mb-3">
+              For the outdoor enthousiasts, the Ardennes offer lots of possibilities for 
+              museums & history, hikes or cycling - see the "To Do in the Ardennes" page. 
+            </p>
+            <p>
+              For the relaxation enthousiasts, we plan on hanging out at the Domaine throughout the day; 
+              tennis, football, or jeu de boules and a sauna await you.
+            </p>
           </ScheduleItem>
 
-          <ScheduleItem title="Barbecue & Bonfire" dateTime="Saturday, June 27th, 16.00 - ...">
-            <p>If the weather treats us well, we’ll turn on the grill. If it doesn’t treat us well… we’ll still turn on the grill.</p>
+          <ScheduleItem title="Barbecue & Bonfire" dateTime="Saturday, June 27th, 16.00">
+            <p>
+              If the weather treats us well, we'll be turning on the grill for a chill dinner. 
+              If the weather does not treat us well, we'll still be turning on the grill for a chill dinner. 
+            </p>
           </ScheduleItem>
 
-          <ScheduleItem title="Breakfast & Departure" dateTime="Sunday, June 28th, 10.00 - ..." isLast>
-            <p>One last breakfast together before we say goodbye. Thank you for celebrating with us!</p>
+          <ScheduleItem title="Breakfast & Departure" dateTime="Sunday, June 28th, 10.00" isLast>
+            <p>
+              One last breakfast together before we say goodbye.
+            </p>
           </ScheduleItem>
+
         </ScheduleTimeline>
       </Section>
 
@@ -92,7 +114,7 @@ const HomePage: React.FC = () => {
         {/* Venue Details */}
         <div className="text-center mb-12">
           <h3 className="text-2xl font-parisienne text-primary mb-2">Domaine Des Officiers</h3>
-          <p className="text-lg mb-4">Rue de la Gare 9, 6690 Vielsalm, Belgium</p>
+          <p className="text-lg mb-4">Rue du Général Jacques 9, 6690 Vielsalm, Belgium</p>
           <div className="flex justify-center gap-4 mb-6">
             <button onClick={() => openModal('/venue-photo.jpg', 'The Venue')} className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors">
               View Location
@@ -115,7 +137,7 @@ const HomePage: React.FC = () => {
             <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-primary"><Plane size={24} /></div>
             <h4 className="font-parisienne text-xl text-secondary mb-3">By Plane</h4>
             <div className="text-sm leading-relaxed space-y-3">
-              <p><strong>Brussels (BRU)</strong> is a great option. You can take a train directly from the airport to Vielsalm Station!</p>
+              <p><strong>Brussels (BRU)</strong> is a great option. The airport is well connected to Vielsalm by train</p>
               <p className="text-xs opacity-80">Other options: Charleroi (CRL), Eindhoven (EIN), Düsseldorf (DUS), Bonn/Cologne (CGN).</p>
             </div>
           </div>
@@ -124,8 +146,8 @@ const HomePage: React.FC = () => {
             <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-primary"><Train size={24} /></div>
             <h4 className="font-parisienne text-xl text-secondary mb-3">By Train</h4>
             <div className="text-sm leading-relaxed">
-              <p className="mb-3"><strong>Vielsalm Train Station</strong> is just a 10-minute walk from the venue.</p>
-              <p>Carrying heavy bags? Let us know your arrival time and we'll come pick you up!</p>
+              <p className="mb-3"><strong>Vielsalm Train Station</strong> is just a 15 minute walk from the venue.</p>
+              <p>Need help with your bags? Let us know!</p>
             </div>
           </div>
 
@@ -135,9 +157,9 @@ const HomePage: React.FC = () => {
             <div className="text-sm leading-relaxed space-y-2">
               <p>Parking in Vielsalm is easy and free.</p>
               <ul className="text-left inline-block list-disc pl-4 space-y-1">
-                <li>At the church (5 min walk)</li>
-                <li><a href="#" className="text-primary underline">Public Parking Lot</a></li>
-                <li>Street parking nearby</li>
+                <li><a href="https://www.google.com/maps/place/50%C2%B017'08.8%22N+5%C2%B054'56.7%22E/@50.2857778,5.9131697,509m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d50.2857778!4d5.91575?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D" className="text-primary underline">Public parking lot (5 min walk)</a></li>
+                <li><a href="https://www.google.com/maps/place/50%C2%B017'17.8%22N+5%C2%B054'53.1%22E/@50.2882635,5.8963086,2037m/data=!3m2!1e3!4b1!4m10!1m5!3m4!2zNTDCsDE3JzA4LjgiTiA1wrA1NCc1Ni43IkU!8m2!3d50.2857778!4d5.91575!3m3!8m2!3d50.288265!4d5.914741?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D" className="text-primary underline">At the church (5 min walk)</a></li>
+                <li>Street parking is easy too.</li>
               </ul>
             </div>
           </div>
@@ -154,8 +176,7 @@ const HomePage: React.FC = () => {
               either at the Domaine or in a nearby gîte a 5-minute walk away.
             </p>
             <p className="mb-2">
-              If you're staying in one of the places we've booked, 
-              <strong className="text-primary">we've got the costs covered.</strong>
+              If you're staying in one of the places we've booked, we've got the costs covered.
             </p>
             <p>
               If you’d rather arrange your own place to stay, that is perfectly fine! Please let us know as soon as possible.
@@ -165,7 +186,7 @@ const HomePage: React.FC = () => {
           <FAQItem icon={Shirt} question="What should I wear?">
             <p className="mb-3">
               <strong className="text-primary">Friday (Fancy & Festive):</strong> We’d love to see you looking your best! 
-              Think long or cocktail dresses, tuxedos, suits, or whatever makes you feel fabulous. 
+              Think long or cocktail dresses, jumpsuits, tuxedos, suits, or whatever makes you feel fabulous. 
               Hats or fascinators are welcome!
             </p>
             <p className="mb-3 italic text-sm opacity-80">
