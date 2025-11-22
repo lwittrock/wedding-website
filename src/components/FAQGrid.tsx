@@ -1,0 +1,15 @@
+import React, { type ReactNode } from "react";
+
+interface FAQGridProps {
+  children: ReactNode;
+}
+
+const FAQGrid: React.FC<FAQGridProps> = ({ children }) => {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {children}
+    </div>
+  );
+};
+
+export default FAQGrid;
