@@ -11,6 +11,7 @@ import ScheduleTimeline from "../components/ScheduleTimeline";
 import ScheduleItem from "../components/ScheduleItem";
 import FAQGrid from "../components/FAQGrid";
 import FAQItem from "../components/FAQItem";
+import RsvpModule from '../components/RsvpModule';
 
 import { useScrollSpy } from "../hooks/useScrollSpy";
 import { SECTIONS } from "../constants/sections";
@@ -209,14 +210,16 @@ const HomePage: React.FC = () => {
         </FAQGrid>
       </Section>
 
-      {/* --- RSVP --- */}
-      <Section id="rsvp" dividerGap="lg" contentBottomPadding="xl" title="RSVP" icon={Users}>
-        <div className="text-center">
-          <p className="text-lg mb-6">Please let us know if you can join us!</p>
-          <button className="bg-primary hover:brightness-90 text-white px-8 py-3 rounded-md transition-all font-alice">
-            RSVP Form (Coming Soon)
-          </button>
-        </div>
+      {/* --- RSVP SECTION --- */}
+      <Section 
+        id="rsvp" 
+        dividerGap="lg" 
+        contentBottomPadding="xl"
+        title="RSVP"
+        icon={Users}
+      >        
+        <RsvpModule />
+        
       </Section>
 
       <Footer />
