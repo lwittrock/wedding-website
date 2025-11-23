@@ -12,7 +12,7 @@ import ScheduleTimeline from "../components/ScheduleTimeline";
 import ScheduleItem from "../components/ScheduleItem";
 import FAQGrid from "../components/FAQGrid";
 import FAQItem from "../components/FAQItem";
-import RsvpTimingGame from "../components/RSVPtimingGame";
+import RsvpTimingGame from "../components/RsvpTimingGame";
 import RsvpModule from '../components/RsvpModule';
 import FloatingRSVP from "../components/FloatingRSVP";
 import PhotoDownload from "../components/PhotoDownload";
