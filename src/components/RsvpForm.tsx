@@ -92,7 +92,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="p-6 bg-white/50 rounded-lg shadow-lg border border-secondary/20 max-w-2xl mx-auto">
       <h3 className="text-2xl font-parisienne text-primary mb-6 text-center">
-        The {initialParty.party_name} Party RSVP
+        The {initialParty.party_name} RSVP
       </h3>
 
       {/* --- 1. ATTENDANCE (PER GUEST) --- */}
@@ -163,7 +163,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
             </p>
             <p className='text-sm text-neutral/80 mb-3'>Will you be staying with us or taking care of your own accommodation?</p>
             <div className="flex flex-col gap-2 text-sm">
-              <label className='cursor-pointer'>
+              <label className='flex items-center cursor-pointer'>
                 <input
                   type="radio"
                   name="accommodation"
@@ -175,7 +175,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                 /> 
                 <span className='ml-2'>I/we'd love to stay at the Domaine/Gîte (costs covered)</span>
               </label>
-              <label className='cursor-pointer'>
+              <label className='flex items-center cursor-pointer'>
                 <input
                   type="radio"
                   name="accommodation"
@@ -185,7 +185,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   className="form-radio text-primary"
                   required={isAnyoneAttending}
                 />
-                <span className='ml-2'>I/we will arrange our own place to stay</span>
+                <span className='ml-2'>I/we will arrange my/our own place to stay</span>
               </label>
             </div>
           </div>
@@ -198,7 +198,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
             </p>
             <p className='text-sm text-neutral/80 mb-3'>Will you be joining the full weekend (Friday until Sunday)?</p>
             <div className="flex flex-col gap-2 text-sm">
-              <label className='cursor-pointer'>
+              <label className='flex items-center cursor-pointer'>
                 <input
                   type="radio"
                   name="duration"
@@ -210,7 +210,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                 /> 
                 <span className='ml-2'>Yes, I/we'll be there for the full weekend (Fri-Sun)</span>
               </label>
-              <label className='cursor-pointer'>
+              <label className='flex items-center cursor-pointer'>
                 <input
                   type="radio"
                   name="duration"
@@ -222,7 +222,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                 />
                 <span className='ml-2'>Friday Only (Ceremony & Party)</span>
               </label>
-              <label className='cursor-pointer'>
+              <label className='flex items-center cursor-pointer'>
                 <input
                   type="radio"
                   name="duration"
