@@ -6,6 +6,7 @@ import Hero from "../components/Hero";
 import Section from "../components/Section";
 import Footer from "../components/Footer";
 import ImageModal from "../components/ImageModal";
+import InfoCard from "../components/InfoCard";
 
 import ScheduleTimeline from "../components/ScheduleTimeline";
 import ScheduleItem from "../components/ScheduleItem";
@@ -20,7 +21,9 @@ import { SECTIONS } from "../constants/sections";
 import { 
   Calendar, MapPin, HelpCircle, Users, 
   Plane, Train, CarFront, Info,
-  CalendarClock, BedDouble, Shirt, Heart, CloudSun, Flower2, Car, Gift
+  CalendarClock, BedDouble, Shirt, Heart, CloudSun, 
+  Flower2, Car, Gift, TreePine, Bath, Home, Map, Camera, Upload,
+  Binoculars
 } from "lucide-react";
 
 const HomePage: React.FC = () => {
@@ -84,11 +87,11 @@ const HomePage: React.FC = () => {
               Breakfast / brunch / lunch is at whatever time you feel ready to leave your bedroom! 
             </p>
             <p className="mb-3">
-              For the outdoor enthousiasts, the Ardennes offer lots of possibilities for 
-              museums & history, hikes or cycling - see the "To Do in the Ardennes" page. 
+              For the outdoor enthusiasts, the Ardennes offer lots of possibilities for 
+              museums & history, hikes or cycling - see the "Explore the Ardennes" section. 
             </p>
             <p>
-              For the relaxation enthousiasts, we plan on hanging out at the Domaine throughout the day; 
+              For the relaxation enthusiasts, we plan on hanging out at the Domaine throughout the day; 
               tennis, football, or jeu de boules and a sauna await you.
             </p>
           </ScheduleItem>
@@ -105,82 +108,192 @@ const HomePage: React.FC = () => {
               One last breakfast together before we say goodbye.
             </p>
           </ScheduleItem>
-
         </ScheduleTimeline>
       </Section>
 
       {/* --- TRAVEL --- */}
-      <Section id="travel" dividerGap="lg" contentBottomPadding="lg" title="Travel Information" icon={MapPin}>
+      <Section id="travel" dividerGap="lg" contentBottomPadding="lg" title="Travel to the venue" icon={MapPin}>
         {/* Venue Details */}
         <div className="text-center mb-12">
           <h3 className="text-2xl font-parisienne text-primary mb-2">Domaine Des Officiers</h3>
           <p className="text-lg mb-4">Rue du Général Jacques 9, 6690 Vielsalm, Belgium</p>
           <div className="flex justify-center gap-4 mb-6">
-            <button onClick={() => openModal('venue-photo.jpg', 'The Venue')} className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors">
+            <button 
+              onClick={() => openModal('venue-photo.jpg', 'The Venue')} 
+              className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors"
+            >
               View Location
             </button>
-            <button onClick={() => openModal('entrance-photo.jpg', 'The Entrance')} className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors">
+            <button 
+              onClick={() => openModal('entrance-photo.jpg', 'The Entrance')} 
+              className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors"
+            >
               View Entrance
             </button>
           </div>
           <div className="bg-secondary/5 p-4 rounded-lg inline-block max-w-2xl mx-auto border border-secondary/20">
             <div className="flex items-start gap-3 text-left">
               <Info className="text-primary shrink-0 mt-1" size={20} />
-              <p className="text-sm italic"><strong>Good to know:</strong> You don't directly see the Domaine from the street. You enter on foot where the flag is visible!</p>
+              <p className="text-sm italic">
+                You don't directly see the Domaine from the street. Enter on foot where the flag is!
+              </p>
             </div>
           </div>
         </div>
 
         {/* Travel Methods */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-primary"><Plane size={24} /></div>
-            <h4 className="font-parisienne text-xl text-secondary mb-3">By Plane</h4>
-            <div className="text-sm leading-relaxed space-y-3">
-              <p><strong>Brussels (BRU)</strong> is a great option. The airport is well connected to Vielsalm by train</p>
-              <p className="text-xs opacity-80">Other options: Charleroi (CRL), Eindhoven (EIN), Düsseldorf (DUS), Bonn/Cologne (CGN).</p>
-            </div>
-          </div>
+          <InfoCard icon={Plane} title="By Plane">
+            <p><strong>Brussels (BRU)</strong> is a great option. The airport is well connected to Vielsalm by train</p>
+            <p className="text-xs opacity-80">Other options: Charleroi (CRL), Eindhoven (EIN), Düsseldorf (DUS), Bonn/Cologne (CGN).</p>
+          </InfoCard>
 
-          <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-primary"><Train size={24} /></div>
-            <h4 className="font-parisienne text-xl text-secondary mb-3">By Train</h4>
-            <div className="text-sm leading-relaxed">
-              <p className="mb-3"><strong>Vielsalm Train Station</strong> is just a 15 minute walk from the venue.</p>
-              <p>Need help with your bags? Let us know!</p>
-            </div>
-          </div>
+          <InfoCard icon={Train} title="By Train">
+            <p className="mb-3"><strong>Vielsalm Train Station</strong> is just a 15 minute walk from the venue.</p>
+            <p>Need help with your bags? Let us know!</p>
+          </InfoCard>
 
-          <div className="flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4 text-primary"><CarFront size={24} /></div>
-            <h4 className="font-parisienne text-xl text-secondary mb-3">By Car</h4>
-            <div className="text-sm leading-relaxed space-y-2">
-              <p>Parking in Vielsalm is easy and free.</p>
-              <ul className="text-left inline-block list-disc pl-4 space-y-1">
-                <li><a href="https://www.google.com/maps/place/50%C2%B017'08.8%22N+5%C2%B054'56.7%22E/@50.2857778,5.9131697,509m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d50.2857778!4d5.91575?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D" className="text-primary underline">Public parking lot (5 min walk)</a></li>
-                <li><a href="https://www.google.com/maps/place/50%C2%B017'17.8%22N+5%C2%B054'53.1%22E/@50.2882635,5.8963086,2037m/data=!3m2!1e3!4b1!4m10!1m5!3m4!2zNTDCsDE3JzA4LjgiTiA1wrA1NCc1Ni43IkU!8m2!3d50.2857778!4d5.91575!3m3!8m2!3d50.288265!4d5.914741?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D" className="text-primary underline">At the church (5 min walk)</a></li>
-                <li>Street parking is easy too.</li>
-              </ul>
-            </div>
-          </div>
+          <InfoCard icon={CarFront} title="By Car">
+            <p><strong>Parking</strong> in Vielsalm is easy and free.</p>
+            <ul className="text-left inline-block list-disc pl-4 space-y-1">
+              <li>
+                <a 
+                  href="https://www.google.com/maps/place/50%C2%B017'08.8%22N+5%C2%B054'56.7%22E/@50.2857778,5.9131697,509m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d50.2857778!4d5.91575?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D" 
+                  className="text-primary underline" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Public parking lot (5 min walk)
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://www.google.com/maps/place/50%C2%B017'17.8%22N+5%C2%B054'53.1%22E/@50.2882635,5.8963086,2037m/data=!3m2!1e3!4b1!4m10!1m5!3m4!2zNTDCsDE3JzA4LjgiTiA1wrA1NCc1Ni43IkU!8m2!3d50.2857778!4d5.91575!3m3!8m2!3d50.288265!4d5.914741?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D" 
+                  className="text-primary underline" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  At the church (5 min walk)
+                </a>
+              </li>
+              <li>Street parking is easy too.</li>
+            </ul>
+          </InfoCard>
+        </div>
+      </Section>
+
+      {/* --- EXPLORE THE ARDENNES --- */}
+      <Section id="ardennes" dividerGap="lg" contentBottomPadding="lg" title="Explore the Ardennes" icon={Binoculars}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <InfoCard icon={Home} title="Vielsalm">
+            <p>Don't want to go far way? Vielsalm offers some great options:</p>
+            <ul className="text-left inline-block list-disc pl-4 space-y-1 mt-2">
+              <li>
+                Lakeside walk - A nice and casual stroll with pretty views
+              </li>
+              <li>
+                Maison Du Pays de Salm - A museum on the people and legends of the region
+              </li>
+              <li>
+                ANOTHER SUGGESTION HERE
+              </li>
+            </ul>
+          </InfoCard>
+
+          <InfoCard icon={TreePine} title="Explore the Region">
+            <p>The Ardennes are known for the beautiful nature, perfect for hikes and biking:</p>
+            <ul className="text-left inline-block list-disc pl-4 space-y-1 mt-2">
+              <li>
+                <a 
+                  href="https://www.visitardenne.com/en/best-ardennes/discover-our-top-10/top-walks-and-hikes" 
+                  className="text-primary underline" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Hiking
+                </a>
+                {" "}- Nice routes for walks & hikes 
+              </li>
+              <li>
+                <a 
+                  href="https://www.ardennes.com/en/itineraries/cycling-in-the-ardennes/" 
+                  className="text-primary underline" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Biking
+                </a>
+                {" "}- Cycling routes 
+              </li>
+              <li>
+                <a 
+                  href="https://chouffe.com/en-gb/" 
+                  className="text-primary underline" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Beer
+                </a>
+                {" "}- The Ardennes are home to some great beers like La Chouffe, Lupulus, and many more
+              </li>
+              <li>
+                <a 
+                  href="https://www.spa-francorchamps.be/nl/" 
+                  className="text-primary underline" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                >
+                  Racing
+                </a>
+                {" "}- You can drive the Circuit de Spa-Francorchamps yourself! 
+              </li>
+            </ul>
+          </InfoCard>
+
+          <InfoCard icon={Map} title="Also Nearby">
+            <p>Within a couple hours of driving are:</p>
+            <ul className="text-left inline-block list-disc pl-4 space-y-1 mt-2">
+              <li><strong>Luxembourg city</strong>
+               - 1.5 hour (the old town is a UNESCO sight)
+               </li>
+              <li><strong>Maastricht </strong>
+               - 1.5 hour (cobblestones, gezelligheid, and a very good place for meeting the love of your life)
+              </li>
+              <li><strong>The Champagne Region</strong>
+               - 2.5 hours (visit the champagne houses and vineyards in Reims / Epernay)
+              </li>
+              <li><strong>Tilburg</strong>
+               - 2.5 hours (visit the Barretts / the Efteling)
+              </li>
+              <li><strong>Paris</strong>
+               - 4 hours (croissants, baguettes, and more)
+              </li>
+            </ul>
+          </InfoCard>
         </div>
       </Section>
 
       {/* --- FAQ --- */}
       <Section id="faq" dividerGap="lg" contentBottomPadding="lg" title="Frequently Asked Questions" icon={HelpCircle}>
         <FAQGrid>
-
           <FAQItem icon={BedDouble} question="What type of accommodation can I expect?">
             <p className="mb-2">
-              We’ve made sure all guests will have a comfortable room for Friday and Saturday night, 
-              either at the Domaine or in a nearby Gîte a 5-minute walk away. All costs are covered by us.
+              We've made sure all guests will have a comfortable room{" "}
+              <button 
+                onClick={() => openModal('venue-room.jpg', 'Example Room at the Venue')} 
+                className="text-primary underline hover:text-primary/80"
+              >
+                (see example)
+              </button>{" "}
+              for Friday and Saturday night, either at the Domaine or in a nearby Gîte a 5-minute walk away. 
+              All costs are covered by us.
             </p>
             <p className="mb-2">
               There are different types of rooms (2, 3, and 4 beds), 
-              we may ask some of you to share with others to have space for everyone.
+              we will ask some of you to share a room with others to have space for everyone.
             </p>
             <p>
-              If you’d rather arrange your own place to stay, that is perfectly fine! 
+              If you'd rather arrange your own place to stay, that is perfectly fine! 
               Please let us know as soon as possible.
             </p>
           </FAQItem>
@@ -188,7 +301,7 @@ const HomePage: React.FC = () => {
           <FAQItem icon={Shirt} question="What should I wear?">
             <p className="mb-3">
               <strong className="text-primary">Friday (Fancy & Festive):</strong> 
-              We’d love to see you looking your best! 
+              We'd love to see you looking your best! 
               Think long or cocktail dresses, jumpsuits, tuxedos, suits, or whatever makes you feel fabulous. 
               Hats or fascinators are welcome!
             </p>
@@ -209,10 +322,22 @@ const HomePage: React.FC = () => {
             Please check your invite for your +1! Let us know if we missed someone important.
           </FAQItem>
 
+          <FAQItem icon={TreePine} question="Why the Ardennes?">
+            <p>
+              The Ardennes is where we fell deeper in love. From weekend getaways hiking through ancient forests to cozy evenings by the fireplace, this region has been the backdrop to some of our most cherished moments. We wanted to share this special place with you as we start our next chapter together.
+            </p>
+          </FAQItem>
+
+          <FAQItem icon={Bath} question="What should I really not forget to bring?">
+            <p>
+              There is a wellness area with a sauna and jacuzzi free for all guests to use. Bring your swimwear and a large towel if you want to use these.
+            </p>
+          </FAQItem>
+
           <FAQItem icon={CloudSun} question="What will the weather be like?">
             Welcome to the Ardennes! It can be unpredictable. 
             Expect sunshine, maybe a few raindrops, and cooler evenings. 
-            Bring a warm layer and you’ll be ready for anything.
+            Bring a warm layer and you'll be ready for anything.
           </FAQItem>
 
           <FAQItem icon={Flower2} question="Is the wedding indoors or outdoors?">
@@ -233,7 +358,7 @@ const HomePage: React.FC = () => {
 
           <FAQItem icon={Gift} question="What can I get as a gift?">
             Your presence is the nicest gift we could ask for. 
-            If you’d like to give a little extra, a contribution to our honeymoon fund would make us very happy.
+            If you'd like to give a little extra, a contribution to our honeymoon fund would make us very happy.
           </FAQItem>
         </FAQGrid>
       </Section>
@@ -242,12 +367,61 @@ const HomePage: React.FC = () => {
       <Section 
         id="rsvp" 
         dividerGap="lg" 
-        contentBottomPadding="xl"
+        contentBottomPadding="lg"
         title="RSVP"
         icon={Users}
       >        
         <RsvpModule />
-        
+      </Section>
+
+      {/* --- PHOTOS SECTION --- */}
+      <Section 
+        id="photos" 
+        dividerGap="lg" 
+        contentBottomPadding="xl"
+        title="Photos"
+        icon={Camera}
+      >
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-lg mb-8 leading-relaxed">
+            Our photographer will capture the official moments, but we'd love to see your perspective too! 
+            Share your photos and help us relive the weekend through your eyes.
+          </p>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {/* Photographer Photos Button */}
+            <div className="flex flex-col items-center">
+              <a 
+                href="#" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full bg-primary hover:brightness-90 text-white px-8 py-4 rounded-md transition-all font-alice flex items-center justify-center gap-3 text-lg"
+              >
+                <Camera size={24} />
+                <span>View Photos</span>
+              </a>
+              <p className="text-sm text-neutral/70 mt-3">
+                Professional photos available at some point after the wedding.
+              </p>
+            </div>
+
+            {/* Upload Photos Button */}
+            <div className="flex flex-col items-center">
+              <a 
+                href="#" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="w-full bg-secondary hover:brightness-90 text-white px-8 py-4 rounded-md transition-all font-alice flex items-center justify-center gap-3 text-lg"
+              >
+                <Upload size={24} />
+                <span>Upload Yours</span>
+              </a>
+              <p className="text-sm text-neutral/70 mt-3">
+                Share your favorite moments with us!
+              </p>
+            </div>
+          </div>
+        </div>
       </Section>
 
       <Footer />
