@@ -125,13 +125,13 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
       </h3>
 
       {/* Search Input */}
-      <div className="flex gap-3 mb-4">
+      <div className="flex gap-2 mb-4">
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Enter your first or last name"
-          className="flex-grow p-3 border border-secondary/50 rounded-md focus:border-primary/80 focus:ring-1 focus:ring-primary/80 transition font-alice"
+          className="flex-1 min-w-0 p-3 border border-secondary/50 rounded-md focus:border-primary/80 focus:ring-1 focus:ring-primary/80 transition font-alice"
           onKeyDown={(e) => {
             if (e.key === 'Enter') handleSearch();
           }}
@@ -139,7 +139,7 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
         />
         <button
           onClick={handleSearch}
-          className="bg-secondary hover:bg-secondary/90 text-white font-alice px-6 py-3 rounded-md transition disabled:opacity-60 flex items-center"
+          className="bg-secondary hover:bg-secondary/90 text-white font-alice px-4 py-3 rounded-md transition disabled:opacity-60 flex items-center"
           disabled={loading}
         >
           {loading ? (
