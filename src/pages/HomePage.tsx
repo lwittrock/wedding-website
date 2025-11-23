@@ -389,7 +389,7 @@ const HomePage: React.FC = () => {
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-lg mb-8 leading-relaxed">
             You want to join the celebration? Please let us know by filling out the RSVP form below. 
-            The <strong className="text-primary">sooner the better</strong> (final deadline is {CONFIG.DATES.RSVP_DEADLINE})!
+            The final deadline is <strong className="text-primary">{CONFIG.DATES.RSVP_DEADLINE}</strong>!
           </p>   
           <RsvpTimingGame />
           <RsvpModule />    
