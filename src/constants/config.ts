@@ -2,8 +2,12 @@
 
 export const CONFIG = {
   PHOTOS: {
+    // Download
     IS_READY: false,
     GALLERY_URL: "https://photos.app.goo.gl/YOUR_FUTURE_LINK_HERE",
+
+    // Upload
+    IS_UPLOAD_READY: false,
   },
   
   DATES: {

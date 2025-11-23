@@ -15,6 +15,7 @@ import FAQItem from "../components/FAQItem";
 import RsvpModule from '../components/RsvpModule';
 import FloatingRSVP from "../components/FloatingRSVP";
 import PhotoDownload from "../components/PhotoDownload";
+import PhotoUpload from "../components/PhotoUpload";
 
 // Hooks and Constants
 import { useScrollSpy } from "../hooks/useScrollSpy";
@@ -26,7 +27,7 @@ import {
   Calendar, MapPin, HelpCircle, Users, 
   Plane, Train, CarFront, Info,
   CalendarClock, BedDouble, Shirt, Heart, CloudSun, 
-  Flower2, Car, Gift, TreePine, Bath, Home, Map, Camera, Upload,
+  Flower2, Car, Gift, TreePine, Bath, Home, Map, Camera,
   Binoculars
 } from "lucide-react";
 
@@ -400,28 +401,18 @@ const HomePage: React.FC = () => {
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-
-            {/* Photographer Photos Button */}
+      
+            {/* Left Column: Photo Download (done) */}
             <div className="flex flex-col items-center">
               <PhotoDownload />
             </div>
 
-            {/* Upload Photos Button */}
+            {/* Right Column: Photo Upload (work in progress) */}
             <div className="flex flex-col items-center">
-              <a 
-                href="#" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-full bg-secondary hover:brightness-90 text-white px-8 py-4 rounded-md transition-all font-alice flex items-center justify-center gap-3 text-lg"
-              >
-                <Upload size={24} />
-                <span>Upload Yours</span>
-              </a>
-              <p className="text-sm text-neutral/70 mt-3">
-                Share your favorite moments with us!
-              </p>
+              <PhotoUpload />
             </div>
-          </div>
+
+    </div>
         </div>
       </Section>
 
