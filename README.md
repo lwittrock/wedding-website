@@ -20,7 +20,7 @@ A personalized wedding website for our celebration in the Belgian Ardennes, June
 
 ## Example
 
-The website is currently hosted via github pages here: www.jenna-lars.eu
+The website can be found here: www.jenna-lars.eu
 
 ---
 
