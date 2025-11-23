@@ -49,6 +49,12 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
     setLoading(true);
     setError(null);
 
+    // Scroll to top of form
+    const formElement = e.currentTarget as HTMLFormElement;
+    const yOffset = -100; // 100px above the form
+    const y = formElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
+    window.scrollTo({ top: y, behavior: 'smooth' });
+
     // 1. Validate if at least one choice was made
     if (guests.some(g => g.is_attending === null)) {
       setError('Please confirm attendance (Accept/Decline) for all members of your party.');
