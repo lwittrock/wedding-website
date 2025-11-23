@@ -33,4 +33,4 @@ jobs:
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
           SCHEDULE_TYPE: ${{ github.event.schedule }}
-        run: node .github/scripts/supabase-ping-report.js
+        run: node .github/scripts/supabase-ping-report.cjs
