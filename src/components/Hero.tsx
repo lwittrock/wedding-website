@@ -18,18 +18,18 @@ export default function Hero() {
       {/* Top text */}
       <div className="relative z-10 w-full px-4 pt-6 sm:pt-8">
         <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-6xl sm:text-7xl lg:text-8xl mb-4 text-primary font-parisienne">
+          <h1 className="text-5xl sm:text-7xl lg:text-8xl mb-4 text-primary font-parisienne">
             Jenna & Lars
           </h1>
 
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl text-secondary font-alice">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl text-secondary font-alice">
             Wedding Weekend
           </h2>
         </div>
       </div>
 
       {/* Bottom text */}
-      <div className="relative z-10 w-full px-4 pb-16 sm:pb-8 lg:pb-12">
+      <div className="relative z-10 w-full px-4 pb-12 sm:pb-8 lg:pb-12">
         <div className="max-w-4xl mx-auto text-center">
           <div className="text-xl sm:text-2xl mb-6 text-neutral font-alice font-semibold">
             26 - 28 June 2026
