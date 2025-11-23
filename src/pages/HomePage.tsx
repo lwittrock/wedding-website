@@ -176,16 +176,19 @@ const HomePage: React.FC = () => {
               either at the Domaine or in a nearby Gîte a 5-minute walk away. All costs are covered by us.
             </p>
             <p className="mb-2">
-              There are different types of rooms (2, 3, and 4 beds), we may ask some of you to share with others to have space for everyone.
+              There are different types of rooms (2, 3, and 4 beds), 
+              we may ask some of you to share with others to have space for everyone.
             </p>
             <p>
-              If you’d rather arrange your own place to stay, that is perfectly fine! Please let us know as soon as possible.
+              If you’d rather arrange your own place to stay, that is perfectly fine! 
+              Please let us know as soon as possible.
             </p>
           </FAQItem>
 
           <FAQItem icon={Shirt} question="What should I wear?">
             <p className="mb-3">
-              <strong className="text-primary">Friday (Fancy & Festive):</strong> We’d love to see you looking your best! 
+              <strong className="text-primary">Friday (Fancy & Festive):</strong> 
+              We’d love to see you looking your best! 
               Think long or cocktail dresses, jumpsuits, tuxedos, suits, or whatever makes you feel fabulous. 
               Hats or fascinators are welcome!
             </p>
@@ -198,8 +201,8 @@ const HomePage: React.FC = () => {
           </FAQItem>
 
           <FAQItem icon={CalendarClock} question="When is the RSVP deadline?">
-            Please RSVP by <strong className="text-primary">April 15th</strong>, so we can have an accurate headcount. 
-            The sooner the better though! :)
+            Please RSVP by <strong className="text-primary">April 15th</strong>, 
+            so we can have an accurate headcount. The sooner the better though! :)
           </FAQItem>
 
           <FAQItem icon={Heart} question="Can I bring a date?">
@@ -207,11 +210,14 @@ const HomePage: React.FC = () => {
           </FAQItem>
 
           <FAQItem icon={CloudSun} question="What will the weather be like?">
-            Welcome to the Ardennes! It can be unpredictable. Expect sunshine, maybe a few raindrops, and cooler evenings. Bring a warm layer and you’ll be ready for anything.
+            Welcome to the Ardennes! It can be unpredictable. 
+            Expect sunshine, maybe a few raindrops, and cooler evenings. 
+            Bring a warm layer and you’ll be ready for anything.
           </FAQItem>
 
           <FAQItem icon={Flower2} question="Is the wedding indoors or outdoors?">
-            Our wedding ceremony is outdoors (if the weather allows). Later in the evening, the party will continue indoors.
+            Our wedding ceremony is outdoors (if the weather allows). 
+            Later in the evening, the party will continue indoors.
           </FAQItem>
 
           <FAQItem icon={Car} question="Where should I park?">
@@ -226,7 +232,8 @@ const HomePage: React.FC = () => {
           </FAQItem>
 
           <FAQItem icon={Gift} question="What can I get as a gift?">
-            Your presence is the nicest gift we could ask for. If you’d like to give a little extra, a contribution to our honeymoon fund would make us very happy.
+            Your presence is the nicest gift we could ask for. 
+            If you’d like to give a little extra, a contribution to our honeymoon fund would make us very happy.
           </FAQItem>
         </FAQGrid>
       </Section>
