@@ -116,10 +116,10 @@ const HomePage: React.FC = () => {
           <h3 className="text-2xl font-parisienne text-primary mb-2">Domaine Des Officiers</h3>
           <p className="text-lg mb-4">Rue du Général Jacques 9, 6690 Vielsalm, Belgium</p>
           <div className="flex justify-center gap-4 mb-6">
-            <button onClick={() => openModal('/venue-photo.jpg', 'The Venue')} className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors">
+            <button onClick={() => openModal('venue-photo.jpg', 'The Venue')} className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors">
               View Location
             </button>
-            <button onClick={() => openModal('/entrance-photo.jpg', 'The Entrance')} className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors">
+            <button onClick={() => openModal('entrance-photo.jpg', 'The Entrance')} className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors">
               View Entrance
             </button>
           </div>
