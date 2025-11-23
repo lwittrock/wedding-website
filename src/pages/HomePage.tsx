@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-// Components and Hooks
+// Components
 import Navigation from "../components/Navigation";
 import Hero from "../components/Hero";
 import Section from "../components/Section";
@@ -13,9 +13,13 @@ import ScheduleItem from "../components/ScheduleItem";
 import FAQGrid from "../components/FAQGrid";
 import FAQItem from "../components/FAQItem";
 import RsvpModule from '../components/RsvpModule';
+import FloatingRSVP from "../components/FloatingRSVP";
+import PhotoDownload from "../components/PhotoDownload";
 
+// Hooks and Constants
 import { useScrollSpy } from "../hooks/useScrollSpy";
 import { SECTIONS } from "../constants/sections";
+import { CONFIG } from "../constants/config";
 
 // Icons
 import { 
@@ -314,7 +318,7 @@ const HomePage: React.FC = () => {
           </FAQItem>
 
           <FAQItem icon={CalendarClock} question="When is the RSVP deadline?">
-            Please RSVP by <strong className="text-primary">April 15th</strong>, 
+            Please RSVP by <strong className="text-primary">{CONFIG.DATES.RSVP_DEADLINE}</strong>, 
             so we can have an accurate headcount. The sooner the better though! :)
           </FAQItem>
 
@@ -324,8 +328,15 @@ const HomePage: React.FC = () => {
 
           <FAQItem icon={TreePine} question="Why the Ardennes?">
             <p>
-              The Ardennes is where we fell deeper in love. From weekend getaways hiking through ancient forests to cozy evenings by the fireplace, this region has been the backdrop to some of our most cherished moments. We wanted to share this special place with you as we start our next chapter together.
+            We don't really know what the deciding factor was; choose your favorite:
             </p>
+            <ul className="text-left inline-block list-disc pl-4 space-y-1 mt-2">
+                <li>It's in between Germany and the Netherlands</li>
+                <li>Belgian beers and waffles</li>
+                <li>It's close to Maastricht</li>
+                <li>The beautiful scenery and spacious venue</li>
+                <li>Did we already mention belgian beers?</li>
+            </ul>
           </FAQItem>
 
           <FAQItem icon={Bath} question="What should I really not forget to bring?">
@@ -389,20 +400,10 @@ const HomePage: React.FC = () => {
           </p>
           
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+
             {/* Photographer Photos Button */}
             <div className="flex flex-col items-center">
-              <a 
-                href="#" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="w-full bg-primary hover:brightness-90 text-white px-8 py-4 rounded-md transition-all font-alice flex items-center justify-center gap-3 text-lg"
-              >
-                <Camera size={24} />
-                <span>View Photos</span>
-              </a>
-              <p className="text-sm text-neutral/70 mt-3">
-                Professional photos available at some point after the wedding.
-              </p>
+              <PhotoDownload />
             </div>
 
             {/* Upload Photos Button */}
@@ -423,6 +424,8 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </Section>
+
+      <FloatingRSVP scrollToSection={scrollToSection} />
 
       <Footer />
     </div>
