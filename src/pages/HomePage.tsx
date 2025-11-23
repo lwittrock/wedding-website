@@ -12,6 +12,7 @@ import ScheduleTimeline from "../components/ScheduleTimeline";
 import ScheduleItem from "../components/ScheduleItem";
 import FAQGrid from "../components/FAQGrid";
 import FAQItem from "../components/FAQItem";
+import RsvpTimingGame from "../components/RSVPtimingGame";
 import RsvpModule from '../components/RsvpModule';
 import FloatingRSVP from "../components/FloatingRSVP";
 import PhotoDownload from "../components/PhotoDownload";
@@ -342,7 +343,8 @@ const HomePage: React.FC = () => {
 
           <FAQItem icon={Bath} question="What should I really not forget to bring?">
             <p>
-              There is a wellness area with a sauna and jacuzzi free for all guests to use. Bring your swimwear and a large towel if you want to use these.
+              There is a wellness area with a sauna and jacuzzi free for all guests to use. 
+              Bring your swimwear and a large towel if you want to use these.
             </p>
           </FAQItem>
 
@@ -370,7 +372,8 @@ const HomePage: React.FC = () => {
 
           <FAQItem icon={Gift} question="What can I get as a gift?">
             Your presence is the nicest gift we could ask for. 
-            If you'd like to give a little extra, a contribution to our honeymoon fund would make us very happy.
+            If you'd like to give a little extra, 
+            a contribution to our honeymoon fund would make us very happy.
           </FAQItem>
         </FAQGrid>
       </Section>
@@ -382,8 +385,16 @@ const HomePage: React.FC = () => {
         contentBottomPadding="lg"
         title="RSVP"
         icon={Users}
-      >        
-        <RsvpModule />
+      > 
+        <div className="max-w-2xl mx-auto text-center">
+          <p className="text-lg mb-8 leading-relaxed">
+            You want to join the celebration? Please let us know by filling out the RSVP form below. 
+            The <strong className="text-primary">sooner the better</strong> (final deadline is {CONFIG.DATES.RSVP_DEADLINE})!
+          </p>   
+          <RsvpTimingGame />
+          <RsvpModule />    
+        </div>
+        
       </Section>
 
       {/* --- PHOTOS SECTION --- */}
@@ -396,7 +407,8 @@ const HomePage: React.FC = () => {
       >
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-lg mb-8 leading-relaxed">
-            Our photographer will capture the official moments, but we'd love to see your perspective too! 
+            Our photographer will capture the official moments, 
+            but we'd love to see your perspective too! 
             Share your photos and help us relive the weekend through your eyes.
           </p>
           
@@ -412,7 +424,7 @@ const HomePage: React.FC = () => {
               <PhotoUpload />
             </div>
 
-    </div>
+          </div>
         </div>
       </Section>
 
