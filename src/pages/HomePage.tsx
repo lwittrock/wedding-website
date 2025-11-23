@@ -201,7 +201,7 @@ const HomePage: React.FC = () => {
                 Maison Du Pays de Salm - A museum on the people and legends of the region
               </li>
               <li>
-                ANOTHER SUGGESTION HERE
+                Vielsalm is a touristy town with cute cafes, shops and restaurants to explore
               </li>
             </ul>
           </InfoCard>
