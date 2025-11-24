@@ -39,7 +39,7 @@ const RsvpModule: React.FC = () => {
   };
 
   return (
-    <div className="w-full">
+    <div id="rsvp-module-container" className="w-full">
       {step === 'lookup' && <RsvpLookup onGroupFound={handleGroupFound} />}
       
       {step === 'form' && party && (

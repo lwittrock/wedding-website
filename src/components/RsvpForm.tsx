@@ -50,11 +50,14 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
     setLoading(true);
     setError(null);
 
-    // Scroll to top of form
-    const formElement = e.currentTarget as HTMLFormElement;
-    const yOffset = -100; // 100px above the form
-    const y = formElement.getBoundingClientRect().top + window.pageYOffset + yOffset;
-    window.scrollTo({ top: y, behavior: 'smooth' });
+    // Scroll to the form container
+    const moduleContainer = document.getElementById('rsvp-module-container');
+    if (moduleContainer) {
+      setTimeout(() => {
+        const y = moduleContainer.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 100);
+    }
 
     // 1. Validate if at least one choice was made
     if (guests.some(g => g.is_attending === null)) {
@@ -73,9 +76,9 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
         is_attending: g.is_attending,
         dietary_preferences: g.dietary_preferences,
         song_request: song, // Duplicated across all party members
-        accommodation_choice: isAnyoneAttending ? accommodation : null, // Also duplicated
-        weekend_duration: isAnyoneAttending ? duration : null, // Also duplicated
-        additional_message: additionalMessage, // Also duplicated
+        accommodation_choice: isAnyoneAttending ? accommodation : null, // Duplicated
+        weekend_duration: isAnyoneAttending ? duration : null, // Duplicated
+        additional_message: additionalMessage, // Duplicated across all party members
       }));
       
       // Upsert: Updates existing guests with all their data
@@ -90,7 +93,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
 
     } catch (err) {
       console.error('Submission Error:', err);
-      setError('A network error occurred. Please try again or contact the couple.');
+      setError('A network error occurred. Please try again or send us a message directly.');
     } finally {
       setLoading(false);
     }
@@ -98,7 +101,8 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
 
   // --- JSX RENDER ---
   return (
-    <form onSubmit={handleSubmit} className="p-6 bg-white/50 rounded-lg shadow-lg border border-secondary/20 max-w-2xl mx-auto">
+    <div id="rsvp-form-container">
+      <form onSubmit={handleSubmit} className="p-6 bg-white/50 rounded-lg shadow-lg border border-secondary/20 max-w-2xl mx-auto">
       <h3 className="text-2xl font-parisienne text-primary mb-6 text-center">
         The {initialParty.party_name} RSVP
       </h3>
@@ -156,7 +160,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
         ))}
       </div>
       
-      {/* --- 2. LOGISTICS (CONDITIONAL ON ATTENDANCE) --- */}
+      {/* --- 2. Logistics (Conditional on Attendance) --- */}
       {isAnyoneAttending && (
         <>
           <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
@@ -247,7 +251,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
         </>
       )}
 
-      {/* --- 3. OTHER (ALWAYS VISIBLE) --- */}
+      {/* --- Other (Always Visible) --- */}
       <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
         Other
       </h4>
@@ -310,6 +314,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
         {isAnyoneAttending ? 'Confirm RSVP' : 'Submit Response'}
       </button>
     </form>
+    </div>
   );
 };
 
