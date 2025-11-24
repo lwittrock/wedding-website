@@ -192,7 +192,7 @@ const HomePage: React.FC = () => {
       <Section id="ardennes" dividerGap="lg" contentBottomPadding="lg" title="Explore the Ardennes" icon={Binoculars}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <InfoCard icon={Home} title="Vielsalm">
-            <p>Don't want to go far way? Vielsalm offers some great options:</p>
+            <p>Don't want to go far away? Vielsalm offers some great options:</p>
             <ul className="text-left inline-block list-disc pl-4 space-y-1 mt-2">
               <li>
                 Lakeside walk - A nice and casual stroll with pretty views
@@ -306,7 +306,7 @@ const HomePage: React.FC = () => {
 
           <FAQItem icon={Shirt} question="What should I wear?">
             <p className="mb-3">
-              <strong className="text-primary">Friday (Fancy & Festive):</strong> 
+              <strong className="text-primary">Friday (Fancy & Festive): </strong> 
               We'd love to see you looking your best! 
               Think long or cocktail dresses, jumpsuits, tuxedos, suits, or whatever makes you feel fabulous. 
               Hats or fascinators are welcome!
