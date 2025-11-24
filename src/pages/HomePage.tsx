@@ -157,7 +157,7 @@ const HomePage: React.FC = () => {
           <InfoCard icon={Train} title="By Train">
             <p className="mb-3"><strong>Vielsalm Train Station</strong> is a ~15 minute walk from the venue {" "}
              <a 
-              href="https://www.google.com/maps/dir/Vielsalm,+6690+Vielsalm,+Belgium/Domaine+des+Officiers,+Rue+du+G%C3%A9n%C3%A9ral+Jacques,+Vielsalm,+Belgium/@50.283036,5.9030915,2037m/data=!3m2!1e3!4b1!4m14!4m13!1m5!1m1!1s0x47c06dfe662ec71b:0x4829c6c26d21e7f8!2m2!1d5.9095804!2d50.2787388!1m5!1m1!1s0x47c0712b76f7381b:0x19d779320b35a16a!2m2!1d5.9163904!2d50.286927!3e2?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D"
+              href={CONFIG.TRAVEL_LINKS.TRAIN_STATION}
               className="text-primary underline" 
               target="_blank" 
               rel="noopener noreferrer"
@@ -174,7 +174,7 @@ const HomePage: React.FC = () => {
             <ul className="text-left inline-block list-disc pl-4 space-y-1">
               <li>
                 <a 
-                  href="https://www.google.com/maps/place/50%C2%B017'08.8%22N+5%C2%B054'56.7%22E/@50.2857778,5.9131697,509m/data=!3m2!1e3!4b1!4m4!3m3!8m2!3d50.2857778!4d5.91575?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D" 
+                  href={CONFIG.TRAVEL_LINKS.PARKING_MAIN}
                   className="text-primary underline" 
                   target="_blank" 
                   rel="noopener noreferrer"
@@ -184,7 +184,7 @@ const HomePage: React.FC = () => {
               </li>
               <li>
                 <a 
-                  href="https://www.google.com/maps/place/50%C2%B017'17.8%22N+5%C2%B054'53.1%22E/@50.2882635,5.8963086,2037m/data=!3m2!1e3!4b1!4m10!1m5!3m4!2zNTDCsDE3JzA4LjgiTiA1wrA1NCc1Ni43IkU!8m2!3d50.2857778!4d5.91575!3m3!8m2!3d50.288265!4d5.914741?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D" 
+                  href={CONFIG.TRAVEL_LINKS.PARKING_CHURCH}
                   className="text-primary underline" 
                   target="_blank" 
                   rel="noopener noreferrer"
