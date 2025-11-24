@@ -155,7 +155,17 @@ const HomePage: React.FC = () => {
           </InfoCard>
 
           <InfoCard icon={Train} title="By Train">
-            <p className="mb-3"><strong>Vielsalm Train Station</strong> is just a 15 minute walk from the venue.</p>
+            <p className="mb-3"><strong>Vielsalm Train Station</strong> is a ~15 minute walk from the venue {" "}
+             <a 
+              href="https://www.google.com/maps/dir/Vielsalm,+6690+Vielsalm,+Belgium/Domaine+des+Officiers,+Rue+du+G%C3%A9n%C3%A9ral+Jacques,+Vielsalm,+Belgium/@50.283036,5.9030915,2037m/data=!3m2!1e3!4b1!4m14!4m13!1m5!1m1!1s0x47c06dfe662ec71b:0x4829c6c26d21e7f8!2m2!1d5.9095804!2d50.2787388!1m5!1m1!1s0x47c0712b76f7381b:0x19d779320b35a16a!2m2!1d5.9163904!2d50.286927!3e2?entry=ttu&g_ep=EgoyMDI1MTExNy4wIKXMDSoASAFQAw%3D%3D"
+              className="text-primary underline" 
+              target="_blank" 
+              rel="noopener noreferrer"
+            >
+              (map)
+              </a>
+            .
+            </p>
             <p>Need help with your bags? Let us know!</p>
           </InfoCard>
 
