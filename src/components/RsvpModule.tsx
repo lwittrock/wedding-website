@@ -12,7 +12,23 @@ const RsvpModule: React.FC = () => {
   const [isAttending, setIsAttending] = useState(false);
 
   const handleGroupFound = (foundParty: PartyGroup) => {
-    setParty(foundParty);
+    // Clean the party data before passing to form
+    const cleanParty: PartyGroup = {
+      ...foundParty,
+      guests: foundParty.guests.map(guest => ({
+        id: guest.id,
+        full_name: guest.full_name,
+        party_name: guest.party_name,
+        is_attending: null,
+        dietary_preferences: undefined,
+        accommodation_choice: undefined,
+        weekend_duration: undefined,
+        song_request: undefined,
+        created_at: guest.created_at,
+        updated_at: guest.updated_at
+      }))
+    };
+    setParty(cleanParty);
     setStep('form');
   };
 
