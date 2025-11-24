@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { supabase } from '../utils/supabase';
-import { Loader2, CheckCircle, Gift, BedDouble, CalendarCheck } from 'lucide-react';
+import { Loader2, CheckCircle, Gift, BedDouble, CalendarCheck, MessageSquare } from 'lucide-react';
 import type { PartyGroup, Guest } from '../types/rsvp';
 
 interface RsvpFormProps {
@@ -16,6 +16,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
   const [accommodation, setAccommodation] = useState(initialParty.guests[0]?.accommodation_choice || '');
   const [duration, setDuration] = useState(initialParty.guests[0]?.weekend_duration || '');
   const [song, setSong] = useState(initialParty.guests[0]?.song_request || '');
+  const [additionalMessage, setAdditionalMessage] = useState(initialParty.guests[0]?.additional_message || '');
 
   // --- Form State ---
   const [loading, setLoading] = useState(false);
@@ -72,8 +73,9 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
         is_attending: g.is_attending,
         dietary_preferences: g.dietary_preferences,
         song_request: song, // Duplicated across all party members
-        accommodation_choice: isAnyoneAttending ? accommodation : null, // Duplicated
-        weekend_duration: isAnyoneAttending ? duration : null, // Duplicated
+        accommodation_choice: isAnyoneAttending ? accommodation : null, // Also duplicated
+        weekend_duration: isAnyoneAttending ? duration : null, // Also duplicated
+        additional_message: additionalMessage, // Also duplicated
       }));
       
       // Upsert: Updates existing guests with all their data
@@ -101,9 +103,9 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
         The {initialParty.party_name} RSVP
       </h3>
 
-      {/* --- 1. ATTENDANCE (PER GUEST) --- */}
+      {/* --- Attendance (Per Guest) --- */}
       <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
-        1. Attendance
+        Attendance
       </h4>
       <div className="space-y-4 mb-8">
         {guests.map((guest) => (
@@ -158,7 +160,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
       {isAnyoneAttending && (
         <>
           <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
-            2. Logistics
+            Logistics
           </h4>
 
           {/* Accommodation */}
@@ -245,31 +247,50 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
         </>
       )}
 
-      {/* --- 3. MUSIC (ONLY IF ATTENDING) --- */}
+      {/* --- 3. OTHER (ALWAYS VISIBLE) --- */}
+      <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
+        Other
+      </h4>
+
+      {/* Song Request (Only if Attending) */}
       {isAnyoneAttending && (
-        <>
-          <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
-            3. Other
-          </h4>
-          <div className="mb-8 p-4 border border-secondary/20 rounded-md bg-white/70">
-            <p className="font-semibold text-neutral mb-2 flex items-center gap-2">
-              <Gift size={18} className="text-primary"/> 
-              Song Request
-            </p>
-            <label htmlFor="song" className="block text-sm text-neutral/80 mb-1">
-              What music will guarantee you on the dancefloor? (Song Title & Artist)
-            </label>
-            <input
-              id="song"
-              type="text"
-              value={song}
-              onChange={(e) => setSong(e.target.value)}
-              placeholder="e.g. Dancing Queen - ABBA"
-              className="w-full p-2 border border-neutral/30 rounded-md text-sm font-alice"
-            />
-          </div>
-        </>
+        <div className="mb-6 p-4 border border-secondary/20 rounded-md bg-white/70">
+          <p className="font-semibold text-neutral mb-2 flex items-center gap-2">
+            <Gift size={18} className="text-primary"/> 
+            Song Request
+          </p>
+          <label htmlFor="song" className="block text-sm text-neutral/80 mb-1">
+            What music will guarantee you on the dancefloor? (Song Title & Artist)
+          </label>
+          <input
+            id="song"
+            type="text"
+            value={song}
+            onChange={(e) => setSong(e.target.value)}
+            placeholder="e.g. Dancing Queen - ABBA"
+            className="w-full p-2 border border-neutral/30 rounded-md text-sm font-alice"
+          />
+        </div>
       )}
+
+      {/* Additional Message (Always visible) */}
+      <div className="mb-8 p-4 border border-secondary/20 rounded-md bg-white/70">
+        <p className="font-semibold text-neutral mb-2 flex items-center gap-2">
+          <MessageSquare size={18} className="text-primary"/> 
+          Additional Message
+        </p>
+        <label htmlFor="additionalMessage" className="block text-sm text-neutral/80 mb-1">
+          You can leave us a note here if there is anything else
+        </label>
+        <textarea
+          id="additionalMessage"
+          value={additionalMessage}
+          onChange={(e) => setAdditionalMessage(e.target.value)}
+          placeholder="Any questions, special requests, or just a nice message for us..."
+          rows={3}
+          className="w-full p-2 border border-neutral/30 rounded-md text-sm font-alice"
+        />
+      </div>
 
       {/* --- SUBMIT & ERRORS --- */}
       {error && (

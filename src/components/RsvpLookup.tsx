@@ -12,6 +12,7 @@ interface Guest {
   song_request?: string;
   accommodation_choice?: string;
   weekend_duration?: string;
+  additional_message?: string;
   created_at?: string;
   updated_at?: string;
 }

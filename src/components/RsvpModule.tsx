@@ -24,6 +24,7 @@ const RsvpModule: React.FC = () => {
         accommodation_choice: undefined,
         weekend_duration: undefined,
         song_request: undefined,
+        additional_message: undefined,
         created_at: guest.created_at,
         updated_at: guest.updated_at
       }))
