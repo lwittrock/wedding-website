@@ -244,7 +244,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   className="form-radio text-primary"
                   required={isAnyoneAttending}
                 />
-                <span className='ml-2'>Other (Please specify in the comments/dietary field)</span>
+                <span className='ml-2'>Other (Please specify in the comment field below.)</span>
               </label>
             </div>
           </div>
@@ -284,7 +284,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
           Additional Message
         </p>
         <label htmlFor="additionalMessage" className="block text-sm text-neutral/80 mb-1">
-          You can leave us a note here if there is anything else
+          You can leave us a note here if you want :)
         </label>
         <textarea
           id="additionalMessage"

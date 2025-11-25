@@ -269,9 +269,6 @@ const HomePage: React.FC = () => {
           <InfoCard icon={Map} title="Also Nearby">
             <p>Within a couple hours of driving are:</p>
             <ul className="text-left inline-block list-disc pl-4 space-y-1 mt-2">
-              <li><strong>Luxembourg city</strong>
-               - 1.5 hour (the old town is a UNESCO sight)
-               </li>
               <li><strong>Maastricht </strong>
                - 1.5 hour (cobblestones, gezelligheid, and a very good place for meeting the love of your life)
               </li>
