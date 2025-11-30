@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Mail } from "lucide-react";
+import { CalendarCheck } from "lucide-react";
 
 interface FloatingRSVPProps {
   scrollToSection: (id: string) => void;
@@ -27,11 +27,11 @@ const FloatingRSVP: React.FC<FloatingRSVPProps> = ({ scrollToSection }) => {
   return (
     <button
       onClick={() => scrollToSection("rsvp")}
-      className="fixed bottom-6 right-6 z-50 bg-primary text-white p-4 rounded-full shadow-lg hover:bg-primary/90 transition-all hover:scale-110 flex items-center gap-2"
+      className="fixed bottom-4 right-4 z-50 bg-primary text-white px-4 py-2.5 md:px-5 md:py-3 rounded-full shadow-lg hover:bg-primary/90 transition-all hover:scale-110 flex items-center gap-2"
       aria-label="RSVP Now"
     >
-      <Mail size={24} />
-      <span className="font-alice hidden md:inline">RSVP</span>
+      <CalendarCheck size={18} className="md:w-5 md:h-5" />
+      <span className="font-alice text-xs md:text-sm font-semibold">RSVP</span>
     </button>
   );
 };
