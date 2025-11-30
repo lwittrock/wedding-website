@@ -27,7 +27,7 @@ export default function Hero() {
       </div>
       
       {/* Bottom text */}
-      <div className="relative z-10 w-full px-4 flex-grow flex items-end pb-32 sm:pb-16 lg:pb-12">
+      <div className="relative z-10 w-full px-4 flex-grow flex items-end pb-28 sm:pb-16 lg:pb-12">
         <div className="max-w-4xl mx-auto text-center w-full">
           <div className="text-xl sm:text-2xl mb-6 text-neutral font-alice font-semibold">
             26 - 28 June 2026
