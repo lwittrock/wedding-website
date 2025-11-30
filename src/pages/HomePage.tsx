@@ -25,7 +25,7 @@ import { CONFIG } from "../constants/config";
 
 // Icons
 import { 
-  Calendar, MapPin, HelpCircle, Users, 
+  Calendar, MapPin, HelpCircle, CalendarCheck, 
   Plane, Train, CarFront, Info,
   CalendarClock, BedDouble, Shirt, Heart, CloudSun, 
   Flower2, Car, Gift, TreePine, Bath, Home, Map, Camera,
@@ -391,7 +391,7 @@ const HomePage: React.FC = () => {
         dividerGap="lg" 
         contentBottomPadding="lg"
         title="RSVP"
-        icon={Users}
+        icon={CalendarCheck}
       > 
         <div className="max-w-2xl mx-auto text-center">
           <p className="text-lg mb-8 leading-relaxed">
