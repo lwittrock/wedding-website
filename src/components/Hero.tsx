@@ -2,14 +2,14 @@ import { MapPin } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section id="home" className="relative min-h-screen flex flex-col pt-16">
+    <section id="home" className="relative h-[100dvh] flex flex-col pt-16">
+      
       {/* Background Image & Gradient Overlay */}
       <div className="absolute inset-0 overflow-hidden">
         <img
           src="venue-painting.png"
           alt="Venue watercolor"
           className="w-full h-full object-cover object-center opacity-90"
-          style={{ maxHeight: "100vh" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-transparent to-background"></div>
       </div>
@@ -27,7 +27,9 @@ export default function Hero() {
       </div>
       
       {/* Bottom text */}
-      <div className="relative z-10 w-full px-4 flex-grow flex items-end pb-36 sm:pb-20 lg:pb-12">
+      {/* CHANGE 3: Adjusted padding-bottom. 'pb-36' (9rem) is huge for mobile. 
+          Reduced to pb-24 for mobile to keep text safer from bottom UI edges. */}
+      <div className="relative z-10 w-full px-4 flex-grow flex items-end pb-24 sm:pb-20 lg:pb-12">
         <div className="max-w-4xl mx-auto text-center w-full">
           <div className="text-xl sm:text-2xl mb-6 text-neutral font-alice font-semibold">
             26 - 28 June 2026
