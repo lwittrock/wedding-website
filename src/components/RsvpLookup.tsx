@@ -46,39 +46,16 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
     setLoading(true);
 
     try {
+      const { data: allMatches, error: rpcError } = await supabase.rpc(
+        'search_guests',
+        { search_term: searchName }
+      ) as { data: Guest[] | null; error: unknown };
+
+      if (rpcError) throw rpcError;
+
+      const matchedGuests = allMatches || [];
       
-      const { data: allGuests, error: testError } = await supabase
-      .from('guests')
-      .select('*');
-    
-      console.log('ALL GUESTS (test):', allGuests);
-      console.log('Test error:', testError);
-
-
-      // Search for guests by full name
-      const { data: nameMatches, error: nameError } = await supabase
-        .from('guests')
-        .select('*')
-        .ilike('full_name', `%${searchName}%`);
-      
-      if (nameError) throw nameError;
-
-      // Search for guests by party name
-      const { data: partyMatches, error: partyError } = await supabase
-        .from('guests')
-        .select('*')
-        .ilike('party_name', `%${searchName}%`);
-      
-      if (partyError) throw partyError;
-
-      console.log('Search term:', searchName);
-      console.log('Name matches:', nameMatches);
-      console.log('Party matches:', partyMatches);
-
-      // Combine results
-      const allMatches = [...(nameMatches || []), ...(partyMatches || [])];
-      
-      if (allMatches.length === 0) {
+      if (matchedGuests.length === 0) {
         setError("We couldn't find an invitation for that name. Please try one full, first or last name. If that does not work, send us a message on WhatsApp!");
         setLoading(false);
         return;
@@ -86,7 +63,7 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
 
       // Get all unique party names from matching guests
       const uniquePartyNames = Array.from(
-        new Set(allMatches.map(g => g.party_name))
+        new Set(matchedGuests.map(g => g.party_name))
       );
 
       // Fetch all guests for each party
@@ -97,11 +74,14 @@ const RsvpLookup: React.FC<RsvpLookupProps> = ({ onGroupFound }) => {
 
       if (fetchError) throw fetchError;
 
+      // Ensure allPartyGuests is treated as Guest[] for type safety
+      const typedAllPartyGuests = (allPartyGuests as Guest[]) || [];
+
       // Group guests by party
       const parties: PartyGroup[] = uniquePartyNames.map(partyName => {
-        const partyGuests = allPartyGuests.filter(g => g.party_name === partyName);
+        const partyGuests = typedAllPartyGuests.filter(g => g.party_name === partyName);
         return {
-          party_name: partyName,
+          party_name: partyName as string, 
           guests: partyGuests
         };
       });
