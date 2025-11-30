@@ -71,6 +71,20 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
       return;
     }
 
+    // 2. Validate logistics fields for weekend guests
+    if (isAnyWeekendGuestAttending) {
+      if (!accommodation) {
+        setError('Please let us know where you\'ll be staying.');
+        setLoading(false);
+        return;
+      }
+      if (!duration) {
+        setError('Please let us know if you\'re staying for the full weekend.');
+        setLoading(false);
+        return;
+      }
+    }
+
     try {
       // 2. Prepare Guest Data for Upsert (Insert/Update)
       // For each guest, include their personal info AND the shared party-level fields
