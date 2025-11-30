@@ -108,10 +108,6 @@ const RsvpTimingGame: React.FC = () => {
               >
                 <Icon className="mx-auto mb-2" size={24} />
                 <span className="font-medium text-xs sm:text-sm">{option.label}</span>
-                
-                {isSelected && option.id === 'today' && (
-                  <Sparkles className="absolute top-2 right-2 text-yellow-400 animate-pulse" size={20} />
-                )}
               </button>
             );
           })}
