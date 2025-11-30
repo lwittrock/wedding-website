@@ -230,7 +230,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   className="form-radio text-primary"
                   required={isAnyWeekendGuestAttending}
                 /> 
-                <span className='ml-2'>Yes, I/we'll be there for the full weekend (Fri-Sun)</span>
+                <span className='ml-2'>Yes! :)</span>
               </label>
               <label className='flex items-center cursor-pointer'>
                 <input
@@ -254,7 +254,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   className="form-radio text-primary"
                   required={isAnyWeekendGuestAttending}
                 />
-                <span className='ml-2'>Other (Please specify in the comment field below.)</span>
+                <span className='ml-2'>Other (please let us know)</span>
               </label>
             </div>
           </div>
