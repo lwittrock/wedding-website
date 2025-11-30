@@ -266,7 +266,7 @@ const HomePage: React.FC = () => {
             </ul>
           </InfoCard>
 
-          <InfoCard icon={Map} title="Also Nearby">
+          <InfoCard icon={Map} title="Also Nearby"> 
             <p>Within a couple hours of driving are:</p>
             <ul className="text-left inline-block list-disc pl-4 space-y-1 mt-2">
               <li><strong>Maastricht </strong>
