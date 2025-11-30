@@ -64,6 +64,12 @@ async function getWeeklyStats() {
       allGuests.filter(g => g.is_attending === null).map(g => g.party_name)
     )].length;
 
+    // NEW: Breakdown by invitation type
+    const weekendInvited = allGuests.filter(g => g.invitation_type === 'weekend').length;
+    const fridayInvited = allGuests.filter(g => g.invitation_type === 'friday').length;
+    const weekendAccepted = allGuests.filter(g => g.invitation_type === 'weekend' && g.is_attending === true).length;
+    const fridayAccepted = allGuests.filter(g => g.invitation_type === 'friday' && g.is_attending === true).length;
+
     return {
       totalGuests,
       totalAccepted,
@@ -74,7 +80,11 @@ async function getWeeklyStats() {
       totalParties: parties.length,
       partiesAccepted,
       partiesPending,
-      acceptanceRate: totalGuests > 0 ? Math.round((totalAccepted / totalGuests) * 100) : 0
+      acceptanceRate: totalGuests > 0 ? Math.round((totalAccepted / totalGuests) * 100) : 0,
+      weekendInvited,
+      fridayInvited,
+      weekendAccepted,
+      fridayAccepted
     };
   } catch (error) {
     console.error('❌ Failed to fetch stats:', error);
@@ -105,9 +115,13 @@ async function sendWeeklyReport(stats) {
   )];
 
   const attendingGuests = allGuests.filter(g => g.is_attending === true);
-  const stayingWithUs = attendingGuests.filter(g => g.accommodation_choice === 'Staying with us').length;
-  const bookingOwn = attendingGuests.filter(g => g.accommodation_choice === 'Booking own').length;
+  
+  // UPDATED: Only weekend guests need accommodation
+  const weekendAttending = attendingGuests.filter(g => g.invitation_type === 'weekend');
+  const stayingWithUs = weekendAttending.filter(g => g.accommodation_choice === 'Staying with us').length;
+  const bookingOwn = weekendAttending.filter(g => g.accommodation_choice === 'Booking own').length;
 
+  // Duration stats (all attending guests)
   const fullWeekend = attendingGuests.filter(g => g.weekend_duration === 'Full Weekend').length;
   const fridayOnly = attendingGuests.filter(g => g.weekend_duration === 'Friday Only').length;
   const other = attendingGuests.filter(g => g.weekend_duration === 'Other').length;
@@ -120,6 +134,12 @@ async function sendWeeklyReport(stats) {
   const dietaryPrefs = attendingGuests
     .filter(g => g.dietary_preferences && g.dietary_preferences.trim() !== '')
     .map(g => `<li><strong>${g.full_name}:</strong> ${g.dietary_preferences}</li>`)
+    .join('');
+
+  // NEW: Messages section
+  const messages = attendingGuests
+    .filter(g => g.additional_message && g.additional_message.trim() !== '')
+    .map(g => `<li><strong>${g.full_name} (${g.party_name}):</strong> ${g.additional_message}</li>`)
     .join('');
 
   const transporter = nodemailer.createTransport({
@@ -151,63 +171,78 @@ async function sendWeeklyReport(stats) {
         ${recentResponses ? `<ul style="margin-top: 10px;">${recentResponses}</ul>` : '<p style="color: #999;">No new responses this week</p>'}
       </div>
 
-      <h3 style="color: #8B7355;">📊 Total Guest Statistics</h3>
+      <h3 style="color: #8B7355;">📊 Overall Statistics</h3>
       <div style="background: #f0f8f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <table style="width: 100%;">
+        <table style="width: 100%; border-collapse: collapse;">
           <tr>
-            <td><strong>✅ Accepted:</strong></td>
-            <td style="text-align: right;">${stats.totalAccepted} guests (${stats.acceptanceRate}%)</td>
+            <td style="padding: 4px 0;"><strong>✅ Accepted:</strong></td>
+            <td style="text-align: right; padding: 4px 0;">${stats.totalAccepted} of ${stats.totalGuests} guests (${stats.acceptanceRate}%)</td>
           </tr>
           <tr>
-            <td><strong>❌ Declined:</strong></td>
-            <td style="text-align: right;">${stats.totalDeclined} guests</td>
+            <td style="padding: 4px 0;"><strong>❌ Declined:</strong></td>
+            <td style="text-align: right; padding: 4px 0;">${stats.totalDeclined} guests</td>
           </tr>
           <tr>
-            <td><strong>⏳ Pending:</strong></td>
-            <td style="text-align: right;">${stats.totalPending} guests</td>
+            <td style="padding: 4px 0;"><strong>⏳ Pending:</strong></td>
+            <td style="text-align: right; padding: 4px 0;">${stats.totalPending} guests</td>
           </tr>
           <tr style="border-top: 2px solid #8B7355;">
-            <td><strong>Total Invited:</strong></td>
-            <td style="text-align: right;"><strong>${stats.totalGuests} guests</strong></td>
+            <td style="padding: 8px 0 4px 0;"><strong>Weekend Guests:</strong></td>
+            <td style="text-align: right; padding: 8px 0 4px 0;">${stats.weekendAccepted} of ${stats.weekendInvited} accepted</td>
+          </tr>
+          <tr>
+            <td style="padding: 4px 0;"><strong>Friday Only Guests:</strong></td>
+            <td style="text-align: right; padding: 4px 0;">${stats.fridayAccepted} of ${stats.fridayInvited} accepted</td>
           </tr>
         </table>
       </div>
 
-      <h3 style="color: #8B7355;">👥 Party Statistics</h3>
+      <h3 style="color: #8B7355;">👥 Party Progress</h3>
       <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <p><strong>Total Parties:</strong> ${stats.totalParties}</p>
-        <p><strong>Confirmed:</strong> ${stats.partiesAccepted} parties</p>
-        <p><strong>Pending:</strong> ${stats.partiesPending} parties</p>
+        <p><strong>✅ Confirmed parties:</strong> ${stats.partiesAccepted} of ${stats.totalParties}</p>
+        <p><strong>⏳ Pending parties:</strong> ${stats.partiesPending}</p>
         ${pendingParties.length > 0 ? `
-          <p style="margin-top: 10px;"><strong>Still waiting to hear from:</strong></p>
-          <ul>${pendingParties.map(p => `<li>${p}</li>`).join('')}</ul>
+          <details style="margin-top: 10px;">
+            <summary style="cursor: pointer; color: #8B7355;"><strong>View pending parties</strong></summary>
+            <ul style="margin-top: 8px;">${pendingParties.map(p => `<li>${p}</li>`).join('')}</ul>
+          </details>
         ` : ''}
       </div>
 
-      <h3 style="color: #8B7355;">🏠 Accommodation (Attending Guests)</h3>
+      <h3 style="color: #8B7355;">🏠 Accommodation (Weekend Guests Only)</h3>
       <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
         <p><strong>Staying with us:</strong> ${stayingWithUs} guests</p>
         <p><strong>Booking own:</strong> ${bookingOwn} guests</p>
+        ${weekendAttending.length > (stayingWithUs + bookingOwn) ? 
+          `<p style="color: #d97706;"><strong>⚠️ Not specified:</strong> ${weekendAttending.length - (stayingWithUs + bookingOwn)} guests</p>` 
+          : ''}
       </div>
 
-      <h3 style="color: #8B7355;">📅 Weekend Duration</h3>
+      <h3 style="color: #8B7355;">📅 Weekend Duration (All Attending)</h3>
       <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <p><strong>Full Weekend:</strong> ${fullWeekend} guests</p>
+        <p><strong>Full Weekend (Fri-Sun):</strong> ${fullWeekend} guests</p>
         <p><strong>Friday Only:</strong> ${fridayOnly} guests</p>
-        ${other > 0 ? `<p><strong>Other:</strong> ${other} guests</p>` : ''}
+        ${other > 0 ? `<p><strong>Other/Custom:</strong> ${other} guests</p>` : ''}
       </div>
 
       ${songRequests ? `
-        <h3 style="color: #8B7355;">🎵 Song Requests</h3>
+        <h3 style="color: #8B7355;">🎵 Song Requests (${attendingGuests.filter(g => g.song_request && g.song_request.trim() !== '').length})</h3>
         <div style="background: #fff9f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
           <ul style="margin: 0;">${songRequests}</ul>
         </div>
       ` : ''}
 
       ${dietaryPrefs ? `
-        <h3 style="color: #8B7355;">🍽️ Dietary Preferences & Notes</h3>
+        <h3 style="color: #8B7355;">🍽️ Dietary Requirements (${attendingGuests.filter(g => g.dietary_preferences && g.dietary_preferences.trim() !== '').length} guests)</h3>
         <div style="background: #fff9f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
           <ul style="margin: 0;">${dietaryPrefs}</ul>
+        </div>
+      ` : ''}
+
+      ${messages ? `
+        <h3 style="color: #8B7355;">💬 Guest Messages</h3>
+        <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+          <ul style="margin: 0;">${messages}</ul>
         </div>
       ` : ''}
 
