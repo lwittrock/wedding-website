@@ -89,7 +89,7 @@ const RsvpTimingGame: React.FC = () => {
           But let's be honest - when are you <span className="italic">actually</span> going to RSVP?
         </p>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-6">
           {options.map((option) => {
             const Icon = option.icon;
             const isSelected = selectedOption === option.id;
@@ -99,7 +99,7 @@ const RsvpTimingGame: React.FC = () => {
                 key={option.id}
                 onClick={() => handleOptionClick(option.id)}
                 className={`
-                  relative p-4 rounded-lg border-2 transition-all duration-300
+                  relative p-2 sm:p-4 rounded-lg border-2 transition-all duration-300
                   ${isSelected ? option.color : 'border-secondary/30 bg-white text-neutral hover:border-secondary/50'}
                   ${!isSelected && option.hoverColor}
                   ${isSelected && option.id === 'lastminute' ? 'animate-shake' : ''}
@@ -107,7 +107,7 @@ const RsvpTimingGame: React.FC = () => {
                 `}
               >
                 <Icon className="mx-auto mb-2" size={24} />
-                <span className="font-medium text-sm">{option.label}</span>
+                <span className="font-medium text-xs sm:text-sm">{option.label}</span>
                 
                 {isSelected && option.id === 'today' && (
                   <Sparkles className="absolute top-2 right-2 text-yellow-400 animate-pulse" size={20} />
