@@ -55,15 +55,6 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
     setLoading(true);
     setError(null);
 
-    // Scroll to the form container
-    const moduleContainer = document.getElementById('rsvp-module-container');
-    if (moduleContainer) {
-      setTimeout(() => {
-        const y = moduleContainer.getBoundingClientRect().top + window.scrollY - 100;
-        window.scrollTo({ top: y, behavior: 'smooth' });
-      }, 100);
-    }
-
     // 1. Validate if at least one choice was made
     if (guests.some(g => g.is_attending === null)) {
       setError('Please confirm attendance (Accept/Decline) for all members of your party.');
@@ -85,8 +76,17 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
       }
     }
 
+    // Scroll to the module container on successful submission start
+    const moduleContainer = document.getElementById('rsvp-module-container');
+    if (moduleContainer) {
+      setTimeout(() => {
+        const y = moduleContainer.getBoundingClientRect().top + window.scrollY - 100;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+      }, 100);
+    }
+
     try {
-      // 2. Prepare Guest Data for Upsert (Insert/Update)
+      // 3. Prepare Guest Data for Upsert (Insert/Update)
       // For each guest, include their personal info AND the shared party-level fields
       const guestUpdates = guests.map(g => ({
         id: g.id,
@@ -112,7 +112,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
 
       if (guestError) throw guestError;
 
-      // 3. Success!
+      // 4. Success!
       onSuccess(isAnyoneAttending);
 
     } catch (err) {
@@ -207,7 +207,6 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={accommodation === 'Staying with us'}
                   onChange={(e) => setAccommodation(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyWeekendGuestAttending}
                 /> 
                 <span className='ml-2'>I/we'd love to stay at the Domaine/Gîte (costs covered)</span>
               </label>
@@ -219,7 +218,6 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={accommodation === 'Booking own'}
                   onChange={(e) => setAccommodation(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyWeekendGuestAttending}
                 />
                 <span className='ml-2'>I/we will arrange my/our own place to stay</span>
               </label>
@@ -242,7 +240,6 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={duration === 'Full Weekend'}
                   onChange={(e) => setDuration(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyWeekendGuestAttending}
                 /> 
                 <span className='ml-2'>Yes! :)</span>
               </label>
@@ -254,7 +251,6 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={duration === 'Friday Only'}
                   onChange={(e) => setDuration(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyWeekendGuestAttending}
                 />
                 <span className='ml-2'>Friday Only (Ceremony & Party)</span>
               </label>
@@ -266,7 +262,6 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={duration === 'Other'}
                   onChange={(e) => setDuration(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyWeekendGuestAttending}
                 />
                 <span className='ml-2'>Other (please let us know)</span>
               </label>
