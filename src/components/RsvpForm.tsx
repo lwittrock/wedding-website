@@ -27,6 +27,11 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
     return guests.some(g => g.is_attending === true);
   }, [guests]);
 
+  // Derived state: is anyone invited for the full weekend AND attending?
+  const isAnyWeekendGuestAttending = useMemo(() => {
+    return guests.some(g => g.is_attending === true && g.invitation_type === 'weekend');
+  }, [guests]);
+
   // Handlers
   const handleAttendanceChange = (guestId: string, attending: boolean) => {
     setGuests(prevGuests =>
@@ -73,11 +78,16 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
         id: g.id,
         full_name: g.full_name,
         party_name: g.party_name,
+        invitation_type: g.invitation_type,
         is_attending: g.is_attending,
         dietary_preferences: g.dietary_preferences,
         song_request: song, // Duplicated across all party members
-        accommodation_choice: isAnyoneAttending ? accommodation : null, // Duplicated
-        weekend_duration: isAnyoneAttending ? duration : null, // Duplicated
+        // Only set logistics fields if any weekend guest is attending
+        accommodation_choice: isAnyWeekendGuestAttending ? accommodation : null,
+        // Auto-set Friday guests to "Friday Only", or use their response for weekend guests
+        weekend_duration: g.is_attending && g.invitation_type === 'friday' 
+          ? 'Friday Only' 
+          : (isAnyWeekendGuestAttending ? duration : null),
         additional_message: additionalMessage, // Duplicated across all party members
       }));
       
@@ -160,8 +170,8 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
         ))}
       </div>
       
-      {/* --- 2. Logistics (Conditional on Attendance) --- */}
-      {isAnyoneAttending && (
+      {/* --- 2. Logistics (Conditional on Weekend Guest Attendance) --- */}
+      {isAnyWeekendGuestAttending && (
         <>
           <h4 className="text-xl font-parisienne text-secondary border-b border-secondary/30 pb-2 mb-4">
             Logistics
@@ -183,7 +193,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={accommodation === 'Staying with us'}
                   onChange={(e) => setAccommodation(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyoneAttending}
+                  required={isAnyWeekendGuestAttending}
                 /> 
                 <span className='ml-2'>I/we'd love to stay at the Domaine/Gîte (costs covered)</span>
               </label>
@@ -195,7 +205,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={accommodation === 'Booking own'}
                   onChange={(e) => setAccommodation(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyoneAttending}
+                  required={isAnyWeekendGuestAttending}
                 />
                 <span className='ml-2'>I/we will arrange my/our own place to stay</span>
               </label>
@@ -218,7 +228,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={duration === 'Full Weekend'}
                   onChange={(e) => setDuration(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyoneAttending}
+                  required={isAnyWeekendGuestAttending}
                 /> 
                 <span className='ml-2'>Yes, I/we'll be there for the full weekend (Fri-Sun)</span>
               </label>
@@ -230,7 +240,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={duration === 'Friday Only'}
                   onChange={(e) => setDuration(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyoneAttending}
+                  required={isAnyWeekendGuestAttending}
                 />
                 <span className='ml-2'>Friday Only (Ceremony & Party)</span>
               </label>
@@ -242,7 +252,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
                   checked={duration === 'Other'}
                   onChange={(e) => setDuration(e.target.value)}
                   className="form-radio text-primary"
-                  required={isAnyoneAttending}
+                  required={isAnyWeekendGuestAttending}
                 />
                 <span className='ml-2'>Other (Please specify in the comment field below.)</span>
               </label>
@@ -284,7 +294,7 @@ const RsvpForm: React.FC<RsvpFormProps> = ({ initialParty, onSuccess }) => {
           Additional Message
         </p>
         <label htmlFor="additionalMessage" className="block text-sm text-neutral/80 mb-1">
-          You can leave us a note here if you want :)
+          
         </label>
         <textarea
           id="additionalMessage"

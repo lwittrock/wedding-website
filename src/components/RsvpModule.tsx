@@ -19,6 +19,7 @@ const RsvpModule: React.FC = () => {
         id: guest.id,
         full_name: guest.full_name,
         party_name: guest.party_name,
+        invitation_type: guest.invitation_type,
         is_attending: null,
         dietary_preferences: undefined,
         accommodation_choice: undefined,

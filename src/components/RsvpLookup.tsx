@@ -7,6 +7,7 @@ interface Guest {
   id: string;
   full_name: string;
   party_name: string;
+  invitation_type: 'weekend' | 'friday';
   is_attending: boolean | null;
   dietary_preferences?: string;
   song_request?: string;

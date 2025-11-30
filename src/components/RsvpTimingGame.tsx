@@ -42,7 +42,7 @@ const RsvpTimingGame: React.FC = () => {
       id: 'soon',
       label: 'At some point (soon)',
       icon: Clock,
-      response: "We appreciate the realistic reply. We're looking forward to hearing from you soon!",
+      response: "We're looking forward to hearing from you soon! :)",
       color: 'border-orange-400 bg-orange-50 text-orange-700',
       hoverColor: 'hover:bg-orange-100',
     },
