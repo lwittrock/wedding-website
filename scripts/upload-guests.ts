@@ -193,7 +193,7 @@ async function uploadGuests() {
   }
 
   console.log('✅ Successfully uploaded all guests!');
-  console.log('\n💡 Tip: Existing guests\' RSVP responses have been preserved.');
+  console.log('Existing guests\' RSVP responses have been preserved.');
 }
 
 uploadGuests().catch(err => {
