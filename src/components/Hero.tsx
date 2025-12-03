@@ -2,7 +2,7 @@ import { MapPin } from "lucide-react";
 
 export default function Hero() {
   return (
-    <section id="home" className="relative h-[100svh] flex flex-col pt-16">
+    <section id="home" className="relative h-[100vh] flex flex-col pt-16">
       
       {/* Background Image & Gradient Overlay */}
       <div className="absolute inset-0 overflow-hidden">
