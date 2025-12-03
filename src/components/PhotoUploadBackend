@@ -1,0 +1,51 @@
+// PhotoUpload.tsx - Updated Upload function logic
+
+const uploadFileToCloudinary = async (file: File, guestName: string) => {
+    // 1. Set the destination URL
+    // Format: https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload
+    const CLOUD_NAME = "YOUR_CLOUD_NAME"; // Get this from your Cloudinary Dashboard
+    const UPLOAD_PRESET = "wedding_guest_upload"; // The name you set up in step 1
+
+    const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+    // 2. Prepare the FormData payload
+    // Cloudinary requires FormData for unsigned uploads
+    const formData = new FormData();
+    formData.append("file", file); // The actual image file
+    formData.append("upload_preset", UPLOAD_PRESET); // The key to use the unsigned settings
+
+    // Pass the guest name as 'context' for organization
+    // Cloudinary will store this as metadata: context:guest_name=John Smith
+    formData.append("context", `guest_name=${guestName}`);
+    
+    // Optional: Set a specific public ID (file name in the cloud)
+    const publicId = `${guestName.replace(/\s/g, '_')}_${Date.now()}`;
+    formData.append("public_id", publicId);
+
+    // 3. Execute the Direct Upload
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            body: formData, // No Content-Type header needed; fetch handles it for FormData
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error ? errorData.error.message : 'Upload failed.');
+        }
+
+        const data = await response.json();
+        return { 
+            status: 'success', 
+            publicId: data.public_id,
+            url: data.secure_url
+        };
+
+    } catch (error) {
+        console.error("Cloudinary Upload Error:", error);
+        throw error;
+    }
+};
+
+// You will call this function inside your PhotoUpload component's upload loop.
+// Example call: await uploadFileToCloudinary(selectedFile, guestName);
