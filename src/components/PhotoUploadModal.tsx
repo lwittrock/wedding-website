@@ -197,7 +197,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
               {/* File Upload */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2 font-alice">
-                  Select Photos
+                  Select Photos (maximum 50 at a time)
                 </label>
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-primary transition">
                   <input
@@ -215,7 +215,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
                   >
                     <Upload className="w-12 h-12 text-gray-400 mb-3" />
                     <span className="text-sm text-gray-600">
-                      Click to select photos or drag and drop (maximum 50 at a time)
+                      Click to select photos or drag and drop
                     </span>
                     <span className="text-xs text-gray-500 mt-1">
                       PNG, JPG, HEIC up to 10MB each
