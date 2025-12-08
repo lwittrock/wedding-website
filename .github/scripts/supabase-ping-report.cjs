@@ -105,9 +105,10 @@ async function sendWeeklyReport(stats) {
     .select('*')
     .gte('updated_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
 
+  // UPDATED: Removed party name from recent responses
   const recentResponses = recentGuests
     .filter(g => g.is_attending !== null)
-    .map(g => `<li>${g.full_name} (${g.party_name}) - ${g.is_attending ? '✅ Accepted' : '❌ Declined'}</li>`)
+    .map(g => `<li>${g.full_name} - ${g.is_attending ? '✅ Accepted' : '❌ Declined'}</li>`)
     .join('');
 
   const pendingParties = [...new Set(
@@ -126,9 +127,15 @@ async function sendWeeklyReport(stats) {
   const fridayOnly = attendingGuests.filter(g => g.weekend_duration === 'Friday Only').length;
   const other = attendingGuests.filter(g => g.weekend_duration === 'Other').length;
 
-  const songRequests = attendingGuests
-    .filter(g => g.song_request && g.song_request.trim() !== '')
-    .map(g => `<li>${g.song_request} <em>(${g.party_name})</em></li>`)
+  // UPDATED: Deduplicate song requests by party
+  const songRequestsByParty = {};
+  attendingGuests.forEach(g => {
+    if (g.song_request && g.song_request.trim() !== '' && !songRequestsByParty[g.party_name]) {
+      songRequestsByParty[g.party_name] = g.song_request;
+    }
+  });
+  const songRequests = Object.entries(songRequestsByParty)
+    .map(([party, song]) => `<li>${song} <em>(${party})</em></li>`)
     .join('');
 
   const dietaryPrefs = attendingGuests
@@ -136,10 +143,15 @@ async function sendWeeklyReport(stats) {
     .map(g => `<li><strong>${g.full_name}:</strong> ${g.dietary_preferences}</li>`)
     .join('');
 
-  // NEW: Messages section
-  const messages = attendingGuests
-    .filter(g => g.additional_message && g.additional_message.trim() !== '')
-    .map(g => `<li><strong>${g.full_name} (${g.party_name}):</strong> ${g.additional_message}</li>`)
+  // UPDATED: Deduplicate messages by party and show only party name
+  const messagesByParty = {};
+  attendingGuests.forEach(g => {
+    if (g.additional_message && g.additional_message.trim() !== '' && !messagesByParty[g.party_name]) {
+      messagesByParty[g.party_name] = g.additional_message;
+    }
+  });
+  const messages = Object.entries(messagesByParty)
+    .map(([party, message]) => `<li><strong>${party}:</strong> ${message}</li>`)
     .join('');
 
   const transporter = nodemailer.createTransport({
@@ -226,7 +238,7 @@ async function sendWeeklyReport(stats) {
       </div>
 
       ${songRequests ? `
-        <h3 style="color: #8B7355;">🎵 Song Requests (${attendingGuests.filter(g => g.song_request && g.song_request.trim() !== '').length})</h3>
+        <h3 style="color: #8B7355;">🎵 Song Requests (${Object.keys(songRequestsByParty).length})</h3>
         <div style="background: #fff9f0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
           <ul style="margin: 0;">${songRequests}</ul>
         </div>
