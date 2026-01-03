@@ -291,7 +291,7 @@ const HomePage: React.FC = () => {
         <FAQGrid>
           <FAQItem icon={BedDouble} question="What type of accommodation can I expect?">
             <p className="mb-2">
-              We've made sure all guests will have a comfortable room{" "}
+              We've made sure all guests staying the weekend will have a comfortable room{" "}
               <button 
                 onClick={() => openModal('venue-room.jpg', 'Example Room at the Venue')} 
                 className="text-primary underline hover:text-primary/80"
