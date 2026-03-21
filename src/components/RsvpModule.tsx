@@ -4,6 +4,36 @@ import RsvpForm from './RsvpForm';
 import { CheckCircle, Heart } from 'lucide-react';
 import type { PartyGroup } from '../types/rsvp';
 
+class RsvpErrorBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  constructor(props: { children: React.ReactNode }) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: Error) {
+    console.error('RSVP error:', error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="max-w-xl mx-auto p-8 bg-white/50 rounded-lg shadow-xl border border-secondary/20 text-center">
+          <p className="text-neutral mb-2">Something went wrong with the RSVP form.</p>
+          <p className="text-sm text-neutral/70">Please refresh the page and try again, or contact us directly.</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 type RsvpStep = 'lookup' | 'form' | 'confirmation';
 
 const RsvpModule: React.FC = () => {
@@ -85,4 +115,10 @@ const RsvpModule: React.FC = () => {
   );
 };
 
-export default RsvpModule;
+const RsvpModuleWithBoundary: React.FC = () => (
+  <RsvpErrorBoundary>
+    <RsvpModule />
+  </RsvpErrorBoundary>
+);
+
+export default RsvpModuleWithBoundary;
