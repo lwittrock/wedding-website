@@ -35,6 +35,7 @@ import {
 const HomePage: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [modalImage, setModalImage] = useState<{src: string, alt: string} | null>(null);
+  const [showBankDetails, setShowBankDetails] = useState(false);
 
   const activeSection = useScrollSpy(SECTIONS.map((s) => s.id), 100);
 
@@ -378,9 +379,26 @@ const HomePage: React.FC = () => {
           </FAQItem>
 
           <FAQItem icon={Gift} question="What can I get as a gift?">
-            Your presence is the nicest gift we could ask for. 
-            If you'd like to give a little extra, 
+            Your presence is the nicest gift we could ask for.
+            If you'd like to give a little extra,
             a contribution to our honeymoon fund would make us very happy.
+            {" "}If you prefer to do this digitally, you can find the details{" "}
+            <button
+              onClick={() => setShowBankDetails(v => !v)}
+              className="text-primary underline hover:text-primary/80"
+            >
+              here
+            </button>
+            .
+            <div className={`transition-all duration-300 overflow-hidden ${
+              showBankDetails ? "max-h-40 opacity-100 mt-3" : "max-h-0 opacity-0"
+            }`}>
+              <div className="text-left text-sm space-y-1">
+                <p><strong>Name:</strong> {CONFIG.BANK.ACCOUNT_HOLDER}</p>
+                <p><strong>IBAN:</strong> {CONFIG.BANK.IBAN}</p>
+                <p><strong>BIC:</strong> {CONFIG.BANK.BIC}</p>
+              </div>
+            </div>
           </FAQItem>
         </FAQGrid>
       </Section>

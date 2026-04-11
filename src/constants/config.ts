@@ -16,6 +16,12 @@ export const CONFIG = {
     WEDDING_DAY_ISO: "2026-06-26", 
   },
 
+  BANK: {
+    ACCOUNT_HOLDER: "A.M. Barrett & L.O. Wittrock",
+    IBAN: "NL97 RABO 0330 5430 75",
+    BIC: "RABONL2U",
+  },
+
   // Google Maps links
   TRAVEL_LINKS: {
     VENUE: "https://www.google.com/maps/search/?api=1&query=Domaine+Des+Officiers+Vielsalm",
