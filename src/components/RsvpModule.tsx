@@ -72,10 +72,12 @@ const RsvpModule: React.FC = () => {
 
   if (!CONFIG.RSVP.IS_OPEN) {
     return (
-      <div className="max-w-xl mx-auto p-8 bg-white/50 rounded-lg shadow-xl border border-secondary/20 text-center">
-        <LockKeyhole size={48} className="text-neutral/40 mx-auto mb-4" />
-        <h3 className="text-2xl font-parisienne text-neutral/60 mb-2">RSVP Closed</h3>
-        <p className="text-neutral/70">
+      <div className="flex flex-col items-center w-full max-w-sm mx-auto">
+        <div className="w-full px-8 py-4 rounded-md font-alice flex items-center justify-center gap-3 text-lg select-none bg-neutral/10 text-neutral/50 cursor-not-allowed border border-neutral/20">
+          <LockKeyhole size={24} />
+          <span>RSVP</span>
+        </div>
+        <p className="text-sm text-neutral/70 mt-3 text-center">
           The RSVP deadline has passed. Please send us a message if anything has changed.
         </p>
       </div>
