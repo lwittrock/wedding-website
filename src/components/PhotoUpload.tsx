@@ -6,10 +6,14 @@ import PhotoUploadModal from "./PhotoUploadModal";
 
 const PhotoUpload: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const isUploadReady = CONFIG.PHOTOS.IS_UPLOAD_READY;
+
+  const today = new Date();
+  const uploadOpenDate = new Date(CONFIG.PHOTOS.UPLOAD_OPEN_ISO);
+  const isDateOpen = today >= uploadOpenDate;
+  const isUploadOpen = CONFIG.PHOTOS.IS_UPLOAD_READY && isDateOpen;
 
   const getMessageContent = () => {
-    if (isUploadReady) {
+    if (isUploadOpen) {
       return {
         icon: <Camera size={24} />,
         text: "Upload Yours!",
@@ -19,8 +23,8 @@ const PhotoUpload: React.FC = () => {
     } else {
       return {
         icon: <LockKeyhole size={24} />,
-        text: "Upload Available Soon",
-        subtext: "We are looking forward to seeing your photos after the wedding!",
+        text: "Upload Opens Soon",
+        subtext: "The uploader will open the day before the wedding.",
         className: "bg-neutral/10 text-neutral/50 cursor-not-allowed border border-neutral/20",
       };
     }
@@ -29,7 +33,7 @@ const PhotoUpload: React.FC = () => {
   const { icon, text, subtext, className } = getMessageContent();
 
   const handleClick = () => {
-    if (isUploadReady) {
+    if (isUploadOpen) {
       setIsModalOpen(true);
     }
   };
@@ -39,7 +43,7 @@ const PhotoUpload: React.FC = () => {
       <div className="flex flex-col items-center relative w-full">
         <div 
           role="button"
-          aria-disabled={!isUploadReady}
+          aria-disabled={!isUploadOpen}
           onClick={handleClick}
           className={`w-full px-8 py-4 rounded-md transition-all font-alice flex items-center justify-center gap-3 text-lg select-none ${className}`}
         >

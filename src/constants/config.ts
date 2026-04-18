@@ -10,8 +10,10 @@ export const CONFIG = {
     IS_READY: false,
     GALLERY_URL: "https://photos.app.goo.gl/YOUR_FUTURE_LINK_HERE",
 
-    // Upload
-    IS_UPLOAD_READY: false,
+    // Upload — kill-switch (set to false to force-lock regardless of date)
+    IS_UPLOAD_READY: true,
+    // Upload auto-opens on this date (one day before the wedding)
+    UPLOAD_OPEN_ISO: "2026-06-25",
   },
   
   DATES: {

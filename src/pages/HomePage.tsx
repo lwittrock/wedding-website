@@ -15,6 +15,7 @@ import FAQItem from "../components/FAQItem";
 import RsvpTimingGame from "../components/RsvpTimingGame";
 import RsvpModule from '../components/RsvpModule';
 import FloatingRSVP from "../components/FloatingRSVP";
+import FloatingPhotos from "../components/FloatingPhotos";
 import PhotoDownload from "../components/PhotoDownload";
 import PhotoUpload from "../components/PhotoUpload";
 
@@ -458,6 +459,8 @@ const HomePage: React.FC = () => {
       </Section>
 
       {CONFIG.RSVP.IS_OPEN && <FloatingRSVP scrollToSection={scrollToSection} />}
+      <FloatingPhotos scrollToSection={scrollToSection} />
+
 
       <Footer />
     </div>
