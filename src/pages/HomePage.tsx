@@ -126,13 +126,13 @@ const HomePage: React.FC = () => {
           <p className="text-lg mb-4">Rue du Général Jacques 9, 6690 Vielsalm, Belgium</p>
           <div className="flex justify-center gap-4 mb-6">
             <button 
-              onClick={() => openModal('venue-photo.jpg', 'The Venue')} 
+              onClick={() => openModal('venue-photo.webp', 'The Venue')} 
               className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors"
             >
               View Location
             </button>
             <button 
-              onClick={() => openModal('entrance-photo.jpg', 'The Entrance')} 
+              onClick={() => openModal('entrance-photo.webp', 'The Entrance')} 
               className="text-sm border border-secondary text-secondary px-4 py-2 rounded hover:bg-secondary hover:text-white transition-colors"
             >
               View Entrance
@@ -294,7 +294,7 @@ const HomePage: React.FC = () => {
             <p className="mb-2">
               We've made sure all guests staying the weekend will have a comfortable room{" "}
               <button 
-                onClick={() => openModal('venue-room.jpg', 'Example Room at the Venue')} 
+                onClick={() => openModal('venue-room.webp', 'Example Room at the Venue')} 
                 className="text-primary underline hover:text-primary/80"
               >
                 (see example)
