@@ -7,7 +7,7 @@ export default function Hero() {
       {/* Background Image & Gradient Overlay */}
       <div className="absolute inset-0 overflow-hidden">
         <img
-          src="venue-painting.png"
+          src="venue-painting.webp"
           alt="Venue watercolor"
           className="w-full h-full object-cover object-center opacity-90"
         />
