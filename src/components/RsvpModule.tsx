@@ -76,7 +76,7 @@ const RsvpModule: React.FC = () => {
         <LockKeyhole size={48} className="text-neutral/40 mx-auto mb-4" />
         <h3 className="text-2xl font-parisienne text-neutral/60 mb-2">RSVP Closed</h3>
         <p className="text-neutral/70">
-          The RSVP deadline has passed. Please contact us directly if anything has changed.
+          The RSVP deadline has passed. Please send us a message if anything has changed.
         </p>
       </div>
     );
