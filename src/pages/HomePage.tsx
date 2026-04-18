@@ -412,12 +412,16 @@ const HomePage: React.FC = () => {
         icon={CalendarCheck}
       > 
         <div className="max-w-2xl mx-auto text-center">
-          <p className="text-lg mb-8 leading-relaxed">
-            You want to join the celebration? Please let us know by filling out the RSVP form below. 
-            The final deadline is <strong className="text-primary">{CONFIG.DATES.RSVP_DEADLINE}</strong>!
-          </p>   
-          <RsvpTimingGame />
-          <RsvpModule />    
+          {CONFIG.RSVP.IS_OPEN ? (
+            <>
+              <p className="text-lg mb-8 leading-relaxed">
+                You want to join the celebration? Please let us know by filling out the RSVP form below.
+                The final deadline is <strong className="text-primary">{CONFIG.DATES.RSVP_DEADLINE}</strong>!
+              </p>
+              <RsvpTimingGame />
+            </>
+          ) : null}
+          <RsvpModule />
         </div>
         
       </Section>
@@ -453,7 +457,7 @@ const HomePage: React.FC = () => {
         </div>
       </Section>
 
-      <FloatingRSVP scrollToSection={scrollToSection} />
+      {CONFIG.RSVP.IS_OPEN && <FloatingRSVP scrollToSection={scrollToSection} />}
 
       <Footer />
     </div>

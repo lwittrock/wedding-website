@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import RsvpLookup from './RsvpLookup';
 import RsvpForm from './RsvpForm';
-import { CheckCircle, Heart } from 'lucide-react';
+import { CheckCircle, Heart, LockKeyhole } from 'lucide-react';
 import type { PartyGroup } from '../types/rsvp';
+import { CONFIG } from '../constants/config';
 
 class RsvpErrorBoundary extends React.Component<
   { children: React.ReactNode },
@@ -68,6 +69,18 @@ const RsvpModule: React.FC = () => {
     setIsAttending(attending);
     setStep('confirmation');
   };
+
+  if (!CONFIG.RSVP.IS_OPEN) {
+    return (
+      <div className="max-w-xl mx-auto p-8 bg-white/50 rounded-lg shadow-xl border border-secondary/20 text-center">
+        <LockKeyhole size={48} className="text-neutral/40 mx-auto mb-4" />
+        <h3 className="text-2xl font-parisienne text-neutral/60 mb-2">RSVP Closed</h3>
+        <p className="text-neutral/70">
+          The RSVP deadline has passed. Please contact us directly if anything has changed.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div id="rsvp-module-container" className="w-full">

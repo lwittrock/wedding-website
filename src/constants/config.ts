@@ -1,6 +1,10 @@
 // src/constants/config.ts
 
 export const CONFIG = {
+  RSVP: {
+    IS_OPEN: false,
+  },
+
   PHOTOS: {
     // Download
     IS_READY: false,
