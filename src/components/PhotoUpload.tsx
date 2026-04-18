@@ -1,6 +1,6 @@
 // PhotoUpload.tsx
 import React, { useState } from "react";
-import { Camera, Lock } from "lucide-react";
+import { Camera, LockKeyhole } from "lucide-react";
 import { CONFIG } from "../constants/config";
 import PhotoUploadModal from "./PhotoUploadModal";
 
@@ -18,7 +18,7 @@ const PhotoUpload: React.FC = () => {
       };
     } else {
       return {
-        icon: <Lock size={24} />,
+        icon: <LockKeyhole size={24} />,
         text: "Upload Available Soon",
         subtext: "We are looking forward to seeing your photos after the wedding!",
         className: "bg-neutral/10 text-neutral/50 cursor-not-allowed border border-neutral/20",

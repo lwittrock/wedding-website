@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Lock, Image as ImageIcon } from "lucide-react";
+import { LockKeyhole, Image as ImageIcon } from "lucide-react";
 import { CONFIG } from "../constants/config";
 
 const PhotoDownload: React.FC = () => {
@@ -34,7 +34,7 @@ const PhotoDownload: React.FC = () => {
             : "bg-neutral/10 text-neutral/50 cursor-not-allowed border border-neutral/20"
           }`}
       >
-        {isReady ? <ImageIcon size={24} /> : <Lock size={24} />}
+        {isReady ? <ImageIcon size={24} /> : <LockKeyhole size={24} />}
         <span>{isReady ? "View Official Photos" : "Official Photos"}</span>
       </a>
 
