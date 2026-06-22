@@ -13,7 +13,7 @@ export const CONFIG = {
     // Upload — kill-switch (set to false to force-lock regardless of date)
     IS_UPLOAD_READY: true,
     // Upload auto-opens on this date (one day before the wedding)
-    UPLOAD_OPEN_ISO: "2026-06-25",
+    UPLOAD_OPEN_ISO: "2026-06-21",
   },
   
   DATES: {
