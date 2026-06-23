@@ -1,6 +1,7 @@
 // PhotoUploadModal.tsx
 import React, { useState, useEffect, useRef } from 'react';
 import { X, CheckCircle, Loader2, Camera, ImagePlus, Trash2, AlertTriangle, Plus } from 'lucide-react';
+import { compressImage } from '../utils/compressImage';
 
 interface UploadResult {
   status: 'success' | 'error';
@@ -25,9 +26,22 @@ interface PhotoUploadModalProps {
 
 const CLOUD_NAME = "davf9thfe";
 const UPLOAD_PRESET = "wedding_guest_upload";
-const MAX_SIZE = 20 * 1024 * 1024;
-const CONCURRENCY = 5;
+// Photos are optimized client-side before upload, so we no longer reject on
+// the Cloudinary size limit. This guard only blocks absurdly large files that
+// could exhaust memory while a phone decodes them for compression.
+const MAX_SIZE = 60 * 1024 * 1024;
+// Cap per batch: keeps phone memory bounded and the queue manageable.
+const MAX_FILES = 50;
+// Compression is CPU-bound and uploads are now small — modest parallelism is
+// kinder to mobile uplinks than saturating them with many large requests.
+const CONCURRENCY = 3;
 const NAME_MAX_LENGTH = 80;
+// Per-attempt network timeout so a stalled mobile connection fails fast and
+// retries instead of hanging forever.
+const UPLOAD_TIMEOUT_MS = 60_000;
+const MAX_RETRIES = 3;
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 const fileKey = (f: File) => `${f.name}|${f.size}|${f.lastModified}`;
 
@@ -41,6 +55,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
   const [mounted, setMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const modalCardRef = useRef<HTMLDivElement>(null);
+  const wakeLockRef = useRef<WakeLockSentinel | null>(null);
 
   // Prevent body scroll while open
   useEffect(() => {
@@ -74,6 +89,37 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
     return () => window.removeEventListener('beforeunload', handler);
   }, [uploading]);
 
+  // Keep the screen awake during upload so a phone locking mid-upload doesn't
+  // suspend the page and stall transfers. Best-effort — unsupported browsers
+  // fall back to the on-screen "keep your phone unlocked" hint.
+  const acquireWakeLock = async () => {
+    try {
+      if ('wakeLock' in navigator) {
+        wakeLockRef.current = await navigator.wakeLock.request('screen');
+      }
+    } catch {
+      /* denied or unsupported — the on-screen hint covers it */
+    }
+  };
+
+  const releaseWakeLock = () => {
+    wakeLockRef.current?.release().catch(() => {});
+    wakeLockRef.current = null;
+  };
+
+  // Re-acquire if the user briefly switches away and back while still uploading
+  // (the OS drops the lock when the page is hidden).
+  useEffect(() => {
+    if (!uploading) return;
+    const onVisible = () => {
+      if (document.visibilityState === 'visible' && !wakeLockRef.current) {
+        acquireWakeLock();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
+  }, [uploading]);
+
   // Revoke any remaining object URLs on unmount
   const photosRef = useRef<SelectedPhoto[]>([]);
   photosRef.current = selectedPhotos;
@@ -98,44 +144,99 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
       .toLowerCase();
   };
 
-  const uploadFileToCloudinary = async (photo: SelectedPhoto, guestName: string): Promise<UploadResult> => {
+  // A single POST attempt with a timeout. Throws on network/timeout/5xx (so the
+  // caller can retry) and marks 4xx as non-retryable (the file itself is the
+  // problem — retrying won't help).
+  const postToCloudinary = async (fileToSend: File, guestName: string): Promise<UploadResult> => {
     const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
 
     const formData = new FormData();
-    formData.append("file", photo.file);
+    formData.append("file", fileToSend);
     formData.append("upload_preset", UPLOAD_PRESET);
 
     const folderName = sanitizeFolderName(guestName);
     formData.append("folder", `wedding_photos/${folderName}`);
-    formData.append("context", `guest_name=${guestName}`);
+    // Cloudinary context pairs are delimited by | and = — strip those from the
+    // value so an unusual name can't corrupt or inject metadata.
+    const contextName = guestName.replace(/[|=]/g, ' ').trim();
+    formData.append("context", `guest_name=${contextName}`);
 
     const timestamp = Date.now();
     const randomStr = Math.random().toString(36).substring(7);
     const publicId = `photo_${timestamp}_${randomStr}`;
     formData.append("public_id", publicId);
 
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), UPLOAD_TIMEOUT_MS);
+
     try {
-      const response = await fetch(url, { method: "POST", body: formData });
+      const response = await fetch(url, { method: "POST", body: formData, signal: controller.signal });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Upload failed');
+        let message = 'Upload failed';
+        try {
+          const errorData = await response.json();
+          message = errorData.error?.message || message;
+        } catch {
+          /* response had no JSON body */
+        }
+        // 4xx (except 429 rate-limit) is a permanent rejection — don't retry.
+        const retryable = response.status >= 500 || response.status === 429;
+        const err = new Error(message) as Error & { retryable?: boolean };
+        err.retryable = retryable;
+        throw err;
       }
 
       const data = await response.json();
       return {
         status: 'success',
-        fileName: photo.file.name,
+        fileName: fileToSend.name,
         publicId: data.public_id,
         url: data.secure_url,
         folder: data.folder,
-        key: photo.key,
       };
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-      console.error("Upload Error:", error);
-      return { status: 'error', fileName: photo.file.name, error: errorMessage, key: photo.key };
+    } finally {
+      clearTimeout(timeout);
     }
+  };
+
+  // Optimize, then upload with exponential-backoff retries on transient errors.
+  const uploadFileToCloudinary = async (photo: SelectedPhoto, guestName: string): Promise<UploadResult> => {
+    let fileToSend: File;
+    try {
+      fileToSend = await compressImage(photo.file);
+    } catch {
+      fileToSend = photo.file;
+    }
+
+    for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        const result = await postToCloudinary(fileToSend, guestName);
+        return { ...result, fileName: photo.file.name, key: photo.key };
+      } catch (error) {
+        const isAbort = error instanceof DOMException && error.name === 'AbortError';
+        // Network failures (TypeError) and timeouts are always retryable.
+        const retryable =
+          isAbort ||
+          error instanceof TypeError ||
+          (error as { retryable?: boolean })?.retryable === true;
+
+        if (!retryable || attempt === MAX_RETRIES) {
+          const errorMessage = isAbort
+            ? 'Timed out — check your connection'
+            : error instanceof Error
+              ? error.message
+              : 'Unknown error occurred';
+          console.error("Upload Error:", error);
+          return { status: 'error', fileName: photo.file.name, error: errorMessage, key: photo.key };
+        }
+
+        await sleep(1000 * 2 ** attempt); // 1s, 2s, 4s
+      }
+    }
+
+    // Unreachable, but satisfies the return type.
+    return { status: 'error', fileName: photo.file.name, error: 'Upload failed', key: photo.key };
   };
 
   const addFiles = (files: File[]) => {
@@ -146,6 +247,9 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
       const existing = new Set(prev.map(p => p.key));
       const additions: SelectedPhoto[] = [];
       for (const file of images) {
+        // Stop at the per-batch cap. Extra files are ignored before a preview
+        // URL is created for them, so nothing leaks.
+        if (prev.length + additions.length >= MAX_FILES) break;
         const key = fileKey(file);
         if (existing.has(key)) continue;
         existing.add(key);
@@ -205,6 +309,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
 
     setUploading(true);
     setUploadResults([]);
+    acquireWakeLock();
 
     const valid: SelectedPhoto[] = [];
     const completed: UploadResult[] = [];
@@ -214,7 +319,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
         completed.push({
           status: 'error',
           fileName: photo.file.name,
-          error: `Too large (${(photo.file.size / 1024 / 1024).toFixed(1)} MB — max 20 MB)`,
+          error: `Too large to process (${(photo.file.size / 1024 / 1024).toFixed(1)} MB) — please send this one to us directly`,
           key: photo.key,
         });
       } else {
@@ -238,6 +343,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
       Array.from({ length: Math.min(CONCURRENCY, valid.length) }, worker)
     );
 
+    releaseWakeLock();
     setUploading(false);
     setShowResults(true);
   };
@@ -278,6 +384,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
   const totalToUpload = selectedPhotos.length;
   const canUpload = guestName.trim().length > 0 && selectedPhotos.length > 0 && !uploading;
   const hasPhotos = selectedPhotos.length > 0;
+  const atLimit = selectedPhotos.length >= MAX_FILES;
 
   if (!isOpen) return null;
 
@@ -339,7 +446,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
                   onChange={handleFileSelect}
                   className="hidden"
                   id="file-upload"
-                  disabled={uploading}
+                  disabled={uploading || atLimit}
                 />
                 <label
                   htmlFor="file-upload"
@@ -351,17 +458,25 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
                     ${isDragging
                       ? 'border-primary bg-primary/5'
                       : 'border-secondary/30 bg-white/40 hover:border-primary/60 hover:bg-white/60'}
-                    ${uploading ? 'pointer-events-none opacity-60' : ''}
+                    ${uploading || atLimit ? 'pointer-events-none opacity-60' : ''}
                     ${hasPhotos ? 'px-4 py-3' : 'px-6 py-8'}
                   `}
                 >
                   {hasPhotos ? (
                     <div className="flex items-center justify-center gap-2 text-neutral">
-                      <Plus className={`w-4 h-4 transition-colors ${isDragging ? 'text-primary' : 'text-neutral/60'}`} />
-                      <span className="font-alice text-sm">
-                        <span className="hidden sm:inline">Add more photos</span>
-                        <span className="sm:hidden">Add more</span>
-                      </span>
+                      {atLimit ? (
+                        <span className="font-alice text-sm text-neutral/60">
+                          Maximum {MAX_FILES} photos reached
+                        </span>
+                      ) : (
+                        <>
+                          <Plus className={`w-4 h-4 transition-colors ${isDragging ? 'text-primary' : 'text-neutral/60'}`} />
+                          <span className="font-alice text-sm">
+                            <span className="hidden sm:inline">Add more photos</span>
+                            <span className="sm:hidden">Add more</span>
+                          </span>
+                        </>
+                      )}
                     </div>
                   ) : (
                     <>
@@ -377,7 +492,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
                         </span>
                       </p>
                       <p className="text-xs text-neutral/60 mt-2">
-                        Photos only — send videos directly to us
+                        Photos only, up to {MAX_FILES} at a time — send videos directly to us
                       </p>
                     </>
                   )}
@@ -389,7 +504,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
                 <div className="mb-6">
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-sm font-alice text-neutral">
-                      {selectedPhotos.length} photo{selectedPhotos.length !== 1 ? 's' : ''} selected
+                      {selectedPhotos.length} of {MAX_FILES} photos selected
                     </span>
                     {!uploading && (
                       <button
@@ -436,7 +551,7 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
                     <Loader2 className="w-5 h-5 animate-spin text-primary mr-2" />
                     <span className="text-sm text-neutral font-alice">
                       {completedCount < totalToUpload
-                        ? `Uploading ${completedCount} of ${totalToUpload}…`
+                        ? `Optimizing & uploading ${completedCount} of ${totalToUpload}…`
                         : 'Finishing up…'}
                     </span>
                   </div>
@@ -448,6 +563,9 @@ const PhotoUploadModal: React.FC<PhotoUploadModalProps> = ({ isOpen, onClose }) 
                       }}
                     />
                   </div>
+                  <p className="text-xs text-neutral/60 text-center mt-3">
+                    Keep this page open and your phone unlocked until it finishes.
+                  </p>
                 </div>
               )}
 
